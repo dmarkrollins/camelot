@@ -10,25 +10,28 @@ export const main = handler(async (event) => {
     console.log('The Body', event.body)
 
     try {
-        data = event.body
+        data = JSON.parse(event.body)
     }
     catch (err) {
         console.log(err.message)
         throw new Error("Could not parse body content!");
-
     }
 
     const diagramId = uuidv4()
     const version = 10000
     const objectKey = `${process.env.STAGE}/${diagramId}.json`
 
+    const d = new Date()
+
     const dbparams = {
         TableName: process.env.TABLE_NAME,
         Item: {
             diagramId,
-            diagramName: data.name,
-            description: data.description,
-            createdAt: new Date().toISOString(),
+            diagramName: data.name || 'A Diagram',
+            dateVal: d.getTime(),
+            description: data.description || '',
+            createdAt: d.toISOString(),
+            nameGroup: 'camelot',
             version,
             objectKey
         }
@@ -41,7 +44,7 @@ export const main = handler(async (event) => {
     const s3params = {
         Bucket: process.env.BUCKET_NAME,
         Key: objectKey,
-        Body: data.diagram,
+        Body: JSON.stringify(data.drawing),
         ContentType: 'application/json'
     }
 

@@ -16,10 +16,10 @@ export const main = handler(async (event) => {
     }
 
     const params = {
+        TableName: process.env.TABLE_NAME,
         Key: {
             "diagramId": { "S": id }
-        },
-        TableName: process.env.TABLE_NAME
+        }
     };
 
     const row = await dynamoDb.getItem(params)
@@ -43,6 +43,7 @@ export const main = handler(async (event) => {
         diagramId: row.diagramId,
         diagramName: row.diagramName,
         description: row.description,
+        version: row.version,
         diagram: diagram.Body
     }
 

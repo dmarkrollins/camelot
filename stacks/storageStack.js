@@ -13,12 +13,18 @@ export default class StorageStack extends sst.Stack {
         super(scope, id, props);
 
         // Create a Table
-        this.table = new Table(this, "Diagrams1", {
+        this.table = new Table(this, "Diagrams", {
             fields: {
                 diagramId: TableFieldType.STRING,
-                diagramName: TableFieldType.STRING
+                diagramName: TableFieldType.STRING,
+                dateVal: TableFieldType.NUMBER,
+                nameGroup: TableFieldType.STRING
             },
-            primaryIndex: { partitionKey: "diagramId", sortKey: "diagramName" },
+            primaryIndex: { partitionKey: "nameGroup", sortKey: "dateVal" },
+            localIndexes: {
+                nameIndex: { sortKey: "diagramName" },
+                idIndex: { sortKey: "diagramId" },
+            },
             billingMode: BillingMode.PAY_PER_REQUEST,
             removalPolicy: RemovalPolicy.DESTROY
         });
