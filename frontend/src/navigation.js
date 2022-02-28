@@ -8,7 +8,7 @@ const Navigation = () => {
     return (
 
         <div className="grid-x ">
-            <div className="cell small-10 medium-8 large-6" style={{ padding: '7px', margin: '0 auto' }}>
+            <div className="cell small-12 medium-10 large-6" style={{ padding: '7px', margin: '0 auto' }}>
 
                 <div style={{ padding: '7px', float: 'left' }}>
                     <img src="/logo.png" width="150" alt="" />

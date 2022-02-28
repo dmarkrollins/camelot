@@ -1,8 +1,9 @@
+/* eslint-disable no-restricted-globals */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState, useEffect, useCallback } from 'react'
 // import { IoWaterSharp, IoEyeOutline, IoEyeOffOutline } from 'react-icons/io5'
-import { FiArrowDownCircle, FiArrowUpCircle, FiPlusCircle } from 'react-icons/fi'
+import { IoAddCircleOutline, IoChevronDownCircleOutline, IoChevronUpCircleOutline, IoRemoveCircleOutline, IoDocumentTextOutline } from 'react-icons/io5'
 
 import { DataManager } from './utils/dataManager'
 import { Oval } from 'react-loader-spinner'
@@ -42,6 +43,20 @@ const DiagramList = () => {
         }
     }
 
+    const removeItem = async (id) => {
+        try {
+            setLoading(true)
+            await DataManager.removeDrawing({ id })
+            const list = diagrams.filter((i) => i.diagramId !== id)
+            const p = Math.ceil(list.length / pageSize) - 1
+            setPages(p)
+            setDiagrams(list)
+        }
+        finally {
+            setLoading(false)
+        }
+    }
+
     useEffect(() => {
         getData()
     }, [search])
@@ -69,7 +84,7 @@ const DiagramList = () => {
     }
 
     const formatDate = (dateStr) => {
-        return moment(dateStr).format('YYYY-MM-DD HH:MM:SS')
+        return moment(dateStr).format('YYYY-MM-DD h:mm:ss a')
     }
 
     const formatVersion = (version) => {
@@ -97,17 +112,31 @@ const DiagramList = () => {
                 break
             }
 
+            const thumbUrl = `https://${diagrams[i].thumbsBucket}.s3.amazonaws.com/${diagrams[i].thumbNail}`
+
             list.push(<tr key={diagrams[i].diagramId}>
-                <td align="left">
-                    <div className="camelot-item">
-                        <p style={{ fontWeight: '600' }}>{diagrams[i].diagramName}</p>
-                        <p>{diagrams[i].description}</p>
-                        <p style={{ fontSize: '.7em' }}>
-                            Version {formatVersion(diagrams[i].version)} - {formatDate(diagrams[i].createdAt)}
-                        </p>
+                <td align="camelot-item">
+                    <div className="grid-x camelot-item">
+                        <div className="cell small-9 text-left">
+                            <p style={{ fontWeight: '600' }}>{diagrams[i].diagramName}</p>
+                            <p>{diagrams[i].description}</p>
+                        </div>
+                        <div className="cell small-3 text-right">
+                            <img src={thumbUrl} width="150" alt='' />
+                        </div>
+                        <div className="column small-6">
+                            <div className='camelot-button-wrapper-inline'>
+                                <button type="button" data-id={diagrams[i].diagramId} className="camelot-button-active" title="Edit Diagram" onClick={handleModify}><IoDocumentTextOutline /><span className="button-title">Edit</span></button>
+                                <button type="button" data-id={diagrams[i].diagramId} className="camelot-button-active" title="Edit Diagram" onClick={handleRemove}><IoRemoveCircleOutline /><span className="button-title">Remove</span></button>
+                            </div>
+                        </div>
+                        <div className="column small-6 text-right" style={{ fontSize: '.7em' }}>
+                            <div style={{ position: 'relative', top: '21px', color: '#ccc' }}>Version {formatVersion(diagrams[i].version)} - {formatDate(diagrams[i].createdAt)}</div>
+                        </div>
                     </div>
+
                 </td>
-            </tr>)
+            </tr >)
         }
 
         return list
@@ -147,7 +176,17 @@ const DiagramList = () => {
     }
 
     const newDrawing = () => {
-        navigate('/new')
+        navigate('/draw')
+    }
+
+    const handleRemove = (e) => {
+        const id = e.currentTarget.dataset.id
+        if (confirm('Are you sure?')) {
+            removeItem(id)
+        }
+    }
+    const handleModify = (e) => {
+        const id = e.currentTarget.dataset.id
     }
 
     return (
@@ -157,13 +196,13 @@ const DiagramList = () => {
 
                 <div className="cell small-12" style={{ width: '100%', marginTop: '30px' }}>
                     <button type="button" className="float-left" style={{ position: 'relative', display: 'inline', top: '-27px' }} onClick={newDrawing}>
-                        <span aria-hidden="true" style={{ fontSize: '1.5em', color: '#A55640' }}><FiPlusCircle /></span>
+                        <span aria-hidden="true" style={{ fontSize: '1.5em', color: '#A55640' }}><IoAddCircleOutline /></span>
                     </button>
                     <button id="btnNext" className="float-right" aria-label="Prev" type="button" disabled={nextDisabled()} onClick={nextPage} style={{ position: 'relative', display: 'inline', top: '-27px' }}>
-                        <span aria-hidden="true"><FiArrowDownCircle style={nextStyle()} /></span>
+                        <span aria-hidden="true"><IoChevronDownCircleOutline style={nextStyle()} /></span>
                     </button>
                     <button id="btnPrev" className="float-right" aria-label="Next" type="button" disabled={previousDisabled()} onClick={prevPage} style={{ position: 'relative', display: 'inline', top: '-27px', marginRight: '27px' }}>
-                        <span aria-hidden="true"><FiArrowUpCircle style={prevStyle()} /></span>
+                        <span aria-hidden="true"><IoChevronUpCircleOutline style={prevStyle()} /></span>
                     </button>
                 </div>
 

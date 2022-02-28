@@ -7,7 +7,7 @@ export default class ApiStack extends sst.Stack {
     constructor(scope, id, props) {
         super(scope, id, props);
 
-        const { bucket, table, stage } = props;
+        const { bucket, table, stage, thumbs } = props;
 
         const params = {
             // defaultAuthorizationType: "AWS_IAM",
@@ -17,6 +17,8 @@ export default class ApiStack extends sst.Stack {
                 environment: {
                     TABLE_NAME: table.tableName,
                     BUCKET_NAME: bucket.bucketName,
+                    THUMBS_BUCKET: thumbs.bucketName,
+                    THUMBS_BASE_URL: thumbs.url,
                     STAGE: stage
                 },
             },
@@ -27,7 +29,7 @@ export default class ApiStack extends sst.Stack {
                 "POST    /diagrams": "src/diagramAdd.main",
                 "GET     /diagrams": "src/diagramList.main",
                 // "PUT     /diagrams/{id}": "src/diagramModify.main",
-                // "DELETE  /diagrams/{id}": "src/diagramRemove.main",
+                "DELETE  /diagrams/{id}": "src/diagramRemove.main",
                 "GET     /diagrams/{id}": "src/diagramItem.main"
             }
         }
@@ -41,7 +43,7 @@ export default class ApiStack extends sst.Stack {
 
         this.api = new sst.Api(this, "Api", params);
 
-        this.api.attachPermissions([table, bucket]);
+        this.api.attachPermissions([table, bucket, thumbs]);
 
         this.addOutputs({
             ApiEndpoint: this.api.url

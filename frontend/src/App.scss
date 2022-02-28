@@ -192,3 +192,33 @@
   .camelot-item {
       border-bottom: 1px solid #ccc;
   }
+
+  .camelot-button-wrapper-inline {
+    position: relative;
+    width: 100px;
+    height: 48px;
+    z-index: 99999;
+    float: left;
+}
+
+.camelot-button-wrapper-inline button {
+  width: 32px;
+  height: 32px;
+  font-size: 1.75em;
+  margin-right: 12px;
+}
+
+//   .camelot-button-wrapper button:hover {
+//       cursor: pointer;
+//   }
+
+.camelot-button-wrapper-inline button span.button-title {
+    font-size: 8pt;
+    display: block;
+    position: relative;
+    top: -2px;
+}
+
+.radius-8 {
+    border-radius: 8px !important;
+}

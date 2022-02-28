@@ -8,22 +8,23 @@ export default class StorageStack extends sst.Stack {
     table
     siteBucket
     diagramBucket
+    thumbsBucket
 
     constructor(scope, id, props) {
         super(scope, id, props);
 
         // Create a Table
-        this.table = new Table(this, "Diagrams", {
+        this.table = new Table(this, "Diagrams2", {
             fields: {
                 diagramId: TableFieldType.STRING,
-                diagramName: TableFieldType.STRING,
+                searchName: TableFieldType.STRING,
                 dateVal: TableFieldType.NUMBER,
                 nameGroup: TableFieldType.STRING
             },
-            primaryIndex: { partitionKey: "nameGroup", sortKey: "dateVal" },
+            primaryIndex: { partitionKey: "nameGroup", sortKey: "diagramId" },
             localIndexes: {
-                nameIndex: { sortKey: "diagramName" },
-                idIndex: { sortKey: "diagramId" },
+                nameIndex: { sortKey: "searchName" },
+                dateIndex: { sortKey: "dateVal" },
             },
             billingMode: BillingMode.PAY_PER_REQUEST,
             removalPolicy: RemovalPolicy.DESTROY
@@ -56,6 +57,22 @@ export default class StorageStack extends sst.Stack {
         this.diagramBucket = new sst.Bucket(this, "diagrambucket", {
             s3Bucket: {
                 versioned: true,
+                cors: [
+                    {
+                        maxAge: 3000,
+                        allowedOrigins: ["*"],
+                        allowedHeaders: ["*"],
+                        allowedMethods: ["GET", "PUT", "POST", "DELETE", "HEAD"]
+                    }
+                ],
+
+            }
+        });
+
+        this.thumbsBucket = new sst.Bucket(this, "thumbsbucket", {
+            s3Bucket: {
+                versioned: true,
+                publicReadAccess: true,
                 cors: [
                     {
                         maxAge: 3000,

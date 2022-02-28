@@ -91,7 +91,7 @@ export default function Draw() {
     }, []);
 
     const handleLibraryChange = (items) => {
-        Camelot.LocalStorage.save({ key: Camelot.Keys.LIBRARIES, value: items, isJson: true })
+        Camelot.LocalStorage.set({ key: Camelot.Keys.LIBRARIES, value: items, isJson: true })
     }
 
     return (
