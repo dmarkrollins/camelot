@@ -15,6 +15,7 @@ const App = () => {
     const [readonly, setReadonly] = useState(false)
     const [modalvisible, setModalVisible] = useState(false)
     const [currentId, setCurrentId] = useState('')
+    const [currentName, setCurrentName] = useState('')
     const [currentDesc, setCurrentDesc] = useState('')
 
     const CamelotFunctions = {
@@ -25,6 +26,7 @@ const App = () => {
         isModalVisible: modalvisible,
         diagramId: currentId,
         diagramDesc: currentDesc,
+        diagramName: currentName,
         setHasDrawn: (val) => {
             setDrawn(val)
         },
@@ -46,8 +48,16 @@ const App = () => {
         setDiagramId: (val) => {
             setCurrentId(val)
         },
+        setDiagramName: (val) => {
+            setCurrentName(val)
+        },
         setDiagramDesc: (val) => {
             setCurrentDesc(val)
+        },
+        clearDiagram: () => {
+            setCurrentId('')
+            setCurrentName('')
+            setCurrentDesc('')
         }
     }
 

@@ -22,18 +22,30 @@ export class DataManager {
         console.log('Response', response.url, response.diagramId, response.diagramName, image.size, image.type)
         try {
             // save thumbnail of diagram
-            axios.put(response.url, image, {
+            await axios.put(response.url, image, {
                 headers: { "content-type": image.type }
             });
-            // return await axios.put(response.url,
-            //     {
-            //         data: image
-            //     },
-            //     {
-            //         headers: {
-            //             'Content-Type': 'image/jpeg'
-            //         }
-            //     })
+
+            return {
+                diagramId: response.diagramId,
+                diagramName: response.diagramName
+            }
+        }
+        catch (err) {
+            console.log('Thumbnail upload error-----------------------\n', err)
+        }
+    }
+
+    static async modifyDrawing({ diagramId, drawing, image }) {
+        const response = await API.put('camelot', `/diagrams/${diagramId}`, {
+            body: { drawing }
+        })
+        console.log('Response', response.url, image.size, image.type)
+        try {
+            // save thumbnail of diagram
+            await axios.put(response.url, image, {
+                headers: { "content-type": image.type }
+            });
         }
         catch (err) {
             console.log('Thumbnail upload error-----------------------\n', err)

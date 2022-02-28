@@ -1,10 +1,9 @@
 import React, { useContext, useState } from 'react'
 import Modal from 'react-foundation-modal'
-import { icons } from 'react-icons/lib'
 import CamContext from './utils/camelotContext'
 import { IoPodiumOutline } from 'react-icons/io5'
 
-const DiagramModal = () => {
+const DiagramModal = ({ handleSave }) => {
 
     const context = useContext(CamContext)
     const [diagramName, setName] = useState('')
@@ -18,12 +17,20 @@ const DiagramModal = () => {
     const nameChange = (event) => {
         setName(event.target.value)
     }
+
     const descChange = (event) => {
         setDesc(event.target.value)
     }
 
-    const saveAndClose = () => {
-
+    const saveAndClose = async () => {
+        try {
+            setErrMessage('')
+            await handleSave({ diagramName, diagramDesc })
+            context.hideModal()
+        }
+        catch (err) {
+            setErrMessage(err.message)
+        }
     }
 
     return (
@@ -51,7 +58,7 @@ const DiagramModal = () => {
                                         <label>Title:</label>
                                     </div>
                                     <div className="cell small-12">
-                                        <input id="diagram-name" type="text" placeholder="Required Diagram Title" onChange={nameChange} value={diagramName} />
+                                        <input id="diagram-name" type="text" placeholder="Required Diagram Title" maxLength="60" onChange={nameChange} value={diagramName} />
                                     </div>
                                 </div>
                             </div>
@@ -61,7 +68,7 @@ const DiagramModal = () => {
                                         <label className="right">Description:</label>
                                     </div>
                                     <div className="cell small-12">
-                                        <textarea id="diagram-desc" type="text" rows="3" placeholder="Optional Diagram Description" onChange={descChange} value={diagramDesc} />
+                                        <textarea id="diagram-desc" type="text" rows="3" placeholder="Optional Diagram Description" onChange={descChange} maxLength="255" value={diagramDesc} />
                                     </div>
                                 </div>
                             </div>

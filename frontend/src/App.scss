@@ -201,6 +201,23 @@
     float: left;
 }
 
+div.camelot-button-wrapper div.diagram-name {
+    font-size: .8em;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 175px;
+    margin: 0 auto;
+    text-align: center;
+    // border: 1px solid #ccc;
+    color: #A55640;
+    margin-top: 0px;
+    position: block;
+    font-weight: 600;
+    margin-top: -7px;
+    margin-bottom: 5px;
+}
+
 .camelot-button-wrapper-inline button {
   width: 32px;
   height: 32px;

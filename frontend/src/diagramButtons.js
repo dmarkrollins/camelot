@@ -27,13 +27,16 @@ const DiagramButtons = ({ xRef }) => {
         }
     }
 
-    const handleSave = async (diagramName, diagramDesc) => {
+    const handleModify = async ({ diagramId = '' }) => {
 
         const elements = xRef.current.getSceneElements()
 
         if (elements.length === 0) {
-            alert('Nothing to do')
-            return
+            throw new Error('Nothing drawn nothing to save!')
+        }
+
+        if (diagramId.trim() === '') {
+            throw new Error('Diagram required to modify existing diagram!')
         }
 
         const opts = {
@@ -46,9 +49,48 @@ const DiagramButtons = ({ xRef }) => {
 
         const blob = await exportToBlob(opts)
 
-        // const resizedBlob = await ResizeBlob(blob)
+        const drawing = {
+            elements,
+            appState: xRef.current.getAppState(),
+            files: xRef.current.getFiles()
+        }
 
-        // console.log('The image', blob)
+        context.setIsSaving(true)
+        try {
+
+            await DataManager.modifyDrawing({ diagramId, drawing, image: blob })
+
+        }
+        catch (err) {
+            console.log(err)
+        }
+        finally {
+            context.setIsSaving(false)
+        }
+
+    }
+
+    const handleSave = async ({ diagramName = '', diagramDesc = '' }) => {
+
+        const elements = xRef.current.getSceneElements()
+
+        if (elements.length === 0) {
+            throw new Error('Nothing drawn nothing to save!')
+        }
+
+        if (diagramName.trim() === '' || diagramName.trim().length < 5) {
+            throw new Error('Diagram name required and must be 5 characters or more!')
+        }
+
+        const opts = {
+            elements,
+            appState: xRef.current.getAppState(),
+            files: xRef.current.getFiles(),
+            mimeType: 'image/jpeg',
+            quality: .5
+        };
+
+        const blob = await exportToBlob(opts)
 
         const drawing = {
             elements,
@@ -56,19 +98,19 @@ const DiagramButtons = ({ xRef }) => {
             files: xRef.current.getFiles()
         }
 
-        const description = 'This is a drawing that is being used to describe something very important to a number of people across the place.'
+        const description = diagramDesc
 
-        const name = prompt('Name your drawing')
+        const name = diagramName
 
         if (name) {
             context.setIsSaving(true)
             try {
 
-                // var fd = new FormData()
-                // fd.append('image', blob)
-                // fd.append('drawing', JSON.stringify(drawing))
+                const response = await DataManager.saveDrawing({ name, description, drawing, image: blob })
 
-                await DataManager.saveDrawing({ name, description, drawing, image: blob })
+                context.setDiagramId(response.diagramId)
+                context.setDiagramName(response.diagramName)
+                context.setDiagramDesc(response.diagramDesc)
             }
             catch (err) {
                 console.log(err)
@@ -83,14 +125,22 @@ const DiagramButtons = ({ xRef }) => {
         context.setGridEnabled(!context.gridEnabled)
     }
 
-    const showModal = () => {
+    const showModal = async () => {
         if (xRef.current.getSceneElements().length > 0) {
-            context.showModal()
+
+            if (context.diagramId) {
+                return await handleModify(context.diagramId)
+            }
+
+            await context.showModal()
         }
     }
 
     return (
         <div className="camelot-button-wrapper">
+            <div className="diagram-name">
+                {context.diagramName}
+            </div>
             <button type="button" className="camelot-button-active" title="Save Diagram" onClick={showModal}><IoCheckmarkDoneCircleOutline /><span className="button-title">Save</span></button>
             <button type="button" className="camelot-button-active" title="Return To List" onClick={handleReturn}><IoChevronBackCircleOutline /><span className="button-title">Return</span></button>
             <button type="button" className="camelot-button-active" title="Clear Diagram" onClick={handleGrid}>{context.gridEnabled ? <IoSquareOutline /> : <IoAppsSharp />}<span className="button-title">Grid</span></button>

@@ -1,7 +1,7 @@
 /* eslint-disable no-restricted-globals */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useContext } from 'react'
 // import { IoWaterSharp, IoEyeOutline, IoEyeOffOutline } from 'react-icons/io5'
 import { IoAddCircleOutline, IoChevronDownCircleOutline, IoChevronUpCircleOutline, IoRemoveCircleOutline, IoDocumentTextOutline } from 'react-icons/io5'
 
@@ -10,10 +10,12 @@ import { Oval } from 'react-loader-spinner'
 import { debounce } from "lodash";
 import moment from 'moment'
 import { useNavigate } from "react-router-dom";
+import CamContext from './utils/camelotContext'
 
 const DiagramList = () => {
 
     const navigate = useNavigate()
+    const context = useContext(CamContext)
 
     const [page, setPage] = useState(0)
     const [diagrams, setDiagrams] = useState([])
@@ -176,6 +178,7 @@ const DiagramList = () => {
     }
 
     const newDrawing = () => {
+        context.clearDiagram()
         navigate('/draw')
     }
 
