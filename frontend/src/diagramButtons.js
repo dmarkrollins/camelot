@@ -136,6 +136,10 @@ const DiagramButtons = ({ xRef }) => {
         }
     }
 
+    const handleRename = () => {
+
+    }
+
     return (
         <div className="camelot-button-wrapper">
             <div className="diagram-name">
@@ -145,7 +149,7 @@ const DiagramButtons = ({ xRef }) => {
             <button type="button" className="camelot-button-active" title="Return To List" onClick={handleReturn}><IoChevronBackCircleOutline /><span className="button-title">Return</span></button>
             <button type="button" className="camelot-button-active" title="Clear Diagram" onClick={handleGrid}>{context.gridEnabled ? <IoSquareOutline /> : <IoAppsSharp />}<span className="button-title">Grid</span></button>
             <button type="button" className="camelot-button-active" title="Clear Diagram" onClick={handleClear}><IoTrashOutline /><span className="button-title">Clear</span></button>
-            <DiagramModal handleSave={handleSave} />
+            <DiagramModal handleSave={handleSave} handleRename={handleRename} />
         </div>
     )
 }

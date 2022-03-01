@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState, useEffect, useCallback, useContext } from 'react'
 // import { IoWaterSharp, IoEyeOutline, IoEyeOffOutline } from 'react-icons/io5'
-import { IoAddCircleOutline, IoChevronDownCircleOutline, IoChevronUpCircleOutline, IoRemoveCircleOutline, IoDocumentTextOutline } from 'react-icons/io5'
+import { IoCreateOutline, IoAddCircleOutline, IoChevronDownCircleOutline, IoChevronUpCircleOutline, IoRemoveCircleOutline, IoCogOutline } from 'react-icons/io5'
 
 import { DataManager } from './utils/dataManager'
 import { Oval } from 'react-loader-spinner'
@@ -11,6 +11,8 @@ import { debounce } from "lodash";
 import moment from 'moment'
 import { useNavigate } from "react-router-dom";
 import CamContext from './utils/camelotContext'
+import DiagramModal from './diagramModal'
+import { Sleep } from './utils/sleep'
 
 const DiagramList = () => {
 
@@ -128,8 +130,9 @@ const DiagramList = () => {
                         </div>
                         <div className="column small-6">
                             <div className='camelot-button-wrapper-inline'>
-                                <button type="button" data-id={diagrams[i].diagramId} className="camelot-button-active" title="Edit Diagram" onClick={handleModify}><IoDocumentTextOutline /><span className="button-title">Edit</span></button>
-                                <button type="button" data-id={diagrams[i].diagramId} className="camelot-button-active" title="Edit Diagram" onClick={handleRemove}><IoRemoveCircleOutline /><span className="button-title">Remove</span></button>
+                                <button type="button" data-id={diagrams[i].diagramId} className="camelot-button-active" title="Rename Diagram" onClick={handleRename}><IoCreateOutline /><div className="button-title">Rename</div></button>
+                                <button type="button" data-id={diagrams[i].diagramId} className="camelot-button-active" title="Modify Diagram" onClick={handleModify}><IoCogOutline /><div className="button-title">Modify</div></button>
+                                <button type="button" data-id={diagrams[i].diagramId} className="camelot-button-active" title="Remove Diagram" onClick={handleRemove}><IoRemoveCircleOutline /><div className="button-title">Remove</div></button>
                             </div>
                         </div>
                         <div className="column small-6 text-right" style={{ fontSize: '.7em' }}>
@@ -182,51 +185,83 @@ const DiagramList = () => {
         navigate('/draw')
     }
 
-    const handleRemove = (e) => {
+    const handleRemove = async (e) => {
         const id = e.currentTarget.dataset.id
         if (confirm('Are you sure?')) {
             removeItem(id)
         }
     }
-    const handleModify = (e) => {
+    const handleModify = async (e) => {
         const id = e.currentTarget.dataset.id
+        const response = await DataManager.getDrawing({ id })
+        context.setDiagram(response.diagramId, response.diagramName, response.diagramDesc, response.drawing,)
+        navigate('/draw')
+    }
+
+    const handleRename = async (e) => {
+        const id = e.currentTarget.dataset.id
+        try {
+            setLoading(true)
+            const response = await DataManager.getDrawing({ id })
+            context.setDiagram(response.diagramId, response.diagramName, response.diagramDesc, response.drawing)
+            await Sleep(250)
+            context.showModal()
+        }
+        finally {
+            setLoading(false)
+        }
+    }
+
+    const handleNameChange = async (diagramName = '', diagramDesc = '') => {
+        if (diagramName === '') {
+            throw new Error('Diagram Name required!')
+        }
+        try {
+            await DataManager.renameDrawing({ diagramId: context.currentDiagramId, diagramName, diagramDesc })
+            context.hideModal()
+        }
+        catch (err) {
+
+        }
+
     }
 
     return (
-        <div className="grid-x" >
+        <>
+            <div className="grid-x" >
 
-            <div className="cell small-12 medium-10 large-6 text-center" style={{ padding: '7px', minHeight: '75vh', margin: '0 auto' }}>
+                <div className="cell small-12 medium-10 large-6 text-center" style={{ padding: '7px', minHeight: '75vh', margin: '0 auto' }}>
 
-                <div className="cell small-12" style={{ width: '100%', marginTop: '30px' }}>
-                    <button type="button" className="float-left" style={{ position: 'relative', display: 'inline', top: '-27px' }} onClick={newDrawing}>
-                        <span aria-hidden="true" style={{ fontSize: '1.5em', color: '#A55640' }}><IoAddCircleOutline /></span>
-                    </button>
-                    <button id="btnNext" className="float-right" aria-label="Prev" type="button" disabled={nextDisabled()} onClick={nextPage} style={{ position: 'relative', display: 'inline', top: '-27px' }}>
-                        <span aria-hidden="true"><IoChevronDownCircleOutline style={nextStyle()} /></span>
-                    </button>
-                    <button id="btnPrev" className="float-right" aria-label="Next" type="button" disabled={previousDisabled()} onClick={prevPage} style={{ position: 'relative', display: 'inline', top: '-27px', marginRight: '27px' }}>
-                        <span aria-hidden="true"><IoChevronUpCircleOutline style={prevStyle()} /></span>
-                    </button>
-                </div>
+                    <div className="cell small-12" style={{ width: '100%', marginTop: '30px', zIndex: '1' }}>
+                        <button type="button" className="float-left" style={{ position: 'relative', display: 'inline', top: '-27px' }} onClick={newDrawing}>
+                            <span aria-hidden="true" style={{ fontSize: '1.5em', color: '#A55640' }}><IoAddCircleOutline /></span>
+                        </button>
+                        <button id="btnNext" className="float-right" aria-label="Prev" type="button" disabled={nextDisabled()} onClick={nextPage} style={{ position: 'relative', display: 'inline', top: '-27px' }}>
+                            <span aria-hidden="true"><IoChevronDownCircleOutline style={nextStyle()} /></span>
+                        </button>
+                        <button id="btnPrev" className="float-right" aria-label="Next" type="button" disabled={previousDisabled()} onClick={prevPage} style={{ position: 'relative', display: 'inline', top: '-27px', marginRight: '27px' }}>
+                            <span aria-hidden="true"><IoChevronUpCircleOutline style={prevStyle()} /></span>
+                        </button>
+                    </div>
 
-                <div className="cell small-12" style={{ marginBottom: '12px' }}>
-                    <input type="text" placeholder="Search" onChange={doSearch} style={{ margin: '0 auto' }} />
-                </div>
+                    <div className="cell small-12" style={{ marginBottom: '12px' }}>
+                        <input type="text" placeholder="Search" onChange={doSearch} style={{ margin: '0 auto' }} />
+                    </div>
 
-                {loading ? <Oval
-                    ariaLabel="loading-indicator"
-                    height={100}
-                    width={100}
-                    strokeWidth={5}
-                    color="#A55640"
-                    secondaryColor="#efefef"
-                    wrapperClass="verticalCenter"
-                /> :
+                    {loading ? <Oval
+                        ariaLabel="loading-indicator"
+                        height={100}
+                        width={100}
+                        strokeWidth={5}
+                        color="#A55640"
+                        secondaryColor="#efefef"
+                        wrapperClass="verticalCenter"
+                    /> : ''}
                     <>
                         <table className="movement-table hover unstriped" style={{ border: '1px solid #ccc', borderRadius: '8px' }}>
                             {/* <thead>
                                 <tr style={{ fontSize: '.8em' }}>
-                                    <th>Drawing</th>
+                                <th>Drawing</th>
                                 </tr>
                             </thead> */}
                             <tbody>
@@ -235,10 +270,11 @@ const DiagramList = () => {
                         </table>
                         <div>Page {page + 1} of {pages + 1} </div>
                     </>
-                }
-            </div>
 
-        </div>
+                </div>
+                <DiagramModal handleSave={handleNameChange} defaultName={context.diagramName} defaultDesc={context.diagramDesc} />
+            </div>
+        </>
 
     )
 }

@@ -29,6 +29,7 @@ export default class ApiStack extends sst.Stack {
                 "POST    /diagrams": "src/diagramAdd.main",
                 "GET     /diagrams": "src/diagramList.main",
                 // "PUT     /diagrams/{id}": "src/diagramModify.main",
+                "PUT     /rename/{id}": "src/diagramRename.main",
                 "DELETE  /diagrams/{id}": "src/diagramRemove.main",
                 "GET     /diagrams/{id}": "src/diagramItem.main"
             }

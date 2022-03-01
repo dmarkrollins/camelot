@@ -17,6 +17,7 @@ const App = () => {
     const [currentId, setCurrentId] = useState('')
     const [currentName, setCurrentName] = useState('')
     const [currentDesc, setCurrentDesc] = useState('')
+    const [drawing, setCurrentDrawing] = useState('')
 
     const CamelotFunctions = {
         hasDrawn: drawn,
@@ -27,6 +28,7 @@ const App = () => {
         diagramId: currentId,
         diagramDesc: currentDesc,
         diagramName: currentName,
+        drawing: drawing,
         setHasDrawn: (val) => {
             setDrawn(val)
         },
@@ -54,11 +56,22 @@ const App = () => {
         setDiagramDesc: (val) => {
             setCurrentDesc(val)
         },
+        setDiagramDrawing: (val) => {
+            setCurrentDrawing(val)
+        },
         clearDiagram: () => {
             setCurrentId('')
             setCurrentName('')
             setCurrentDesc('')
+            setCurrentDrawing('')
+        },
+        setDiagram: (id, name, desc, drawing) => {
+            setCurrentId(id)
+            setCurrentName(name)
+            setCurrentDesc(desc)
+            setCurrentDrawing(drawing)
         }
+
     }
 
     return (
@@ -66,7 +79,6 @@ const App = () => {
             <Routes>
                 <Route path="/" element={<Diagrams />} />
                 <Route path="/view/:id" element={<Draw readonly={true} />} />
-                <Route path="/draw/:id" element={<Draw />} />
                 <Route path="/draw" element={<Draw />} />
             </Routes>
         </CamelotProvider >

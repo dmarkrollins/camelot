@@ -1,14 +1,15 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import Modal from 'react-foundation-modal'
 import CamContext from './utils/camelotContext'
 import { IoPodiumOutline } from 'react-icons/io5'
 
-const DiagramModal = ({ handleSave }) => {
+const DiagramModal = ({ handleSave, defaultName = '', defaultDesc = '' }) => {
 
     const context = useContext(CamContext)
-    const [diagramName, setName] = useState('')
-    const [diagramDesc, setDesc] = useState('')
+    const [diagramName, setName] = useState(defaultName)
+    const [diagramDesc, setDesc] = useState(defaultDesc)
     const [errMessage, setErrMessage] = useState('')
+
 
     const hideModal = () => {
         context.hideModal()
@@ -39,7 +40,7 @@ const DiagramModal = ({ handleSave }) => {
             open={context.isModalVisible}
             closeModal={context.hideModal}
             isModal={true}
-            size="tiny radius-8 animate__animated animate__zoomIn"
+            size="top-of-heap tiny radius-8 animate__animated animate__zoomIn"
         >
             <div className="grid-container">
                 <div className="grid-x" >

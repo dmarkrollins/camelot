@@ -1,7 +1,6 @@
 import handler from "./util/handler";
 import dynamoDb from "./util/dynamoDb";
 import s3 from "./util/s3";
-import { uuid } from 'uuidv4'
 
 export const main = handler(async (event) => {
 
@@ -11,6 +10,8 @@ export const main = handler(async (event) => {
         id = event.pathParameters.id
     }
 
+    console.log('The ID', id)
+
     if (!id) {
         throw new Error('ID path parameter required .../diagrams/{id}')
     }
@@ -18,21 +19,23 @@ export const main = handler(async (event) => {
     const params = {
         TableName: process.env.TABLE_NAME,
         Key: {
-            "diagramId": { "S": id }
-        }
+            nameGroup: 'camelot',
+            diagramId: id
+        },
+        ProjectionExpression: "diagramId, diagramName, diagramDesc, version, objectKey"
     };
 
-    const row = await dynamoDb.getItem(params)
+    const row = await dynamoDb.get(params)
 
     if (!row) {
         throw new Error('Diagram not found!')
     }
 
-    console.log(JSON.stringify(row))
+    console.log('Found Diagram', JSON.stringify(row))
 
     const s3Params = {
         Bucket: process.env.BUCKET_NAME,
-        Key: row.objectKey
+        Key: row.Item.objectKey
     }
 
     const diagram = await s3.getObject(s3Params)
@@ -40,11 +43,11 @@ export const main = handler(async (event) => {
     console.log('The document', diagram.body)
 
     return {
-        diagramId: row.diagramId,
-        diagramName: row.diagramName,
-        description: row.description,
-        version: row.version,
-        diagram: diagram.Body
+        diagramId: row.Item.diagramId,
+        diagramName: row.Item.diagramName,
+        description: row.Item.description,
+        version: row.Item.version,
+        drawing: diagram.Body
     }
 
 });

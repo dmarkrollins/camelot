@@ -52,4 +52,10 @@ export class DataManager {
         }
     }
 
+    static async renameDrawing({ diagramId, diagramName, diagramDesc }) {
+        return await API.put('camelot', `/rename/${diagramId}`, {
+            body: { diagramName, diagramDesc }
+        })
+    }
+
 }

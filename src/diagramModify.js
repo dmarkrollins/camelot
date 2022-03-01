@@ -59,6 +59,10 @@ export const main = handler(async (event) => {
 
     console.log('After putting all objects')
 
+    // TODO: need to update the version on the diagram in dynamo
+
+
+
     const url = await GetSignedUrlForFile({ bucket: process.env.THUMBS_BUCKET, fileName: diagram.thumbNail })
 
     console.log('The Url', url)
