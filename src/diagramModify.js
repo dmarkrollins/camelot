@@ -60,8 +60,28 @@ export const main = handler(async (event) => {
     console.log('After putting all objects')
 
     // TODO: need to update the version on the diagram in dynamo
+    const newVersion = diagram.version += 1
 
-
+    try {
+        const updParams = {
+            TableName: process.env.TABLE_NAME,
+            Key: {
+                nameGroup: 'camelot',
+                diagramId: id
+            },
+            UpdateExpression: "diagramName = :n, diagramDesc = :d, version=:v",
+            ExpressionAttributeValues: {
+                ":n": data.diagramName,
+                ":d": data.diagramDesc,
+                ":v": newVersion
+            }
+        }
+        await dynamoDb.update(updParams)
+    }
+    catch (err) {
+        console.log(err)
+        throw new Error('Diagram not found!')
+    }
 
     const url = await GetSignedUrlForFile({ bucket: process.env.THUMBS_BUCKET, fileName: diagram.thumbNail })
 

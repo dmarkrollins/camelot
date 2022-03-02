@@ -26,8 +26,8 @@ const App = () => {
         isReadOnly: readonly,
         isModalVisible: modalvisible,
         diagramId: currentId,
-        diagramDesc: currentDesc,
         diagramName: currentName,
+        diagramDesc: currentDesc,
         drawing: drawing,
         setHasDrawn: (val) => {
             setDrawn(val)

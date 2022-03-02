@@ -11,7 +11,7 @@ import { debounce } from "lodash";
 import moment from 'moment'
 import { useNavigate } from "react-router-dom";
 import CamContext from './utils/camelotContext'
-import DiagramModal from './diagramModal'
+import ListModal from './diagramModal'
 import { Sleep } from './utils/sleep'
 
 const DiagramList = () => {
@@ -25,6 +25,9 @@ const DiagramList = () => {
     const [pages, setPages] = useState(1)
     const [loading, setLoading] = useState(true)
     const [search, setSearch] = useState('')
+    const [showModal, setShowModal] = useState(false)
+    const [diagramName, setDiagramName] = useState('')
+    const [diagramDesc, setDiagramDesc] = useState('')
 
     const searchHandler = useCallback(debounce((val) => {
         setSearch(val)
@@ -193,9 +196,18 @@ const DiagramList = () => {
     }
     const handleModify = async (e) => {
         const id = e.currentTarget.dataset.id
-        const response = await DataManager.getDrawing({ id })
-        context.setDiagram(response.diagramId, response.diagramName, response.diagramDesc, response.drawing,)
-        navigate('/draw')
+        setLoading(true)
+        try {
+            const response = await DataManager.getDrawing({ id })
+            context.setDiagram(response.diagramId, response.diagramName, response.diagramDesc, response.drawing)
+            navigate('/draw')
+        }
+        catch (err) {
+            console.log(err)
+        }
+        finally {
+            setLoading(false)
+        }
     }
 
     const handleRename = async (e) => {
@@ -203,27 +215,48 @@ const DiagramList = () => {
         try {
             setLoading(true)
             const response = await DataManager.getDrawing({ id })
+            console.log(response)
+            setDiagramName(response.diagramName)
+            setDiagramDesc(response.diagramDesc)
             context.setDiagram(response.diagramId, response.diagramName, response.diagramDesc, response.drawing)
-            await Sleep(250)
-            context.showModal()
+            Sleep(200)
+            setShowModal(true)
         }
         finally {
             setLoading(false)
         }
     }
 
-    const handleNameChange = async (diagramName = '', diagramDesc = '') => {
+    const handleNameChange = async ({ diagramName = '', diagramDesc = '' }) => {
         if (diagramName === '') {
             throw new Error('Diagram Name required!')
         }
         try {
-            await DataManager.renameDrawing({ diagramId: context.currentDiagramId, diagramName, diagramDesc })
-            context.hideModal()
+            setLoading(true)
+            await DataManager.renameDrawing({ diagramId: context.diagramId, diagramName, diagramDesc })
+
+            const list = [...diagrams];
+
+            const foundIndex = list.findIndex(x => x.diagramId === context.diagramId);
+            if (foundIndex !== -1) {
+                list[foundIndex].diagramName = diagramName
+                list[foundIndex].description = diagramDesc
+                setDiagrams(list)
+            }
+
+            setShowModal(false)
         }
         catch (err) {
-
+            console.log(err)
+            throw new Error('Problem occurred saving diagram info!')
         }
+        finally {
+            setLoading(false)
+        }
+    }
 
+    const closeModal = () => {
+        setShowModal(false)
     }
 
     return (
@@ -255,7 +288,7 @@ const DiagramList = () => {
                         strokeWidth={5}
                         color="#A55640"
                         secondaryColor="#efefef"
-                        wrapperClass="verticalCenter"
+                        wrapperClass="spinner"
                     /> : ''}
                     <>
                         <table className="movement-table hover unstriped" style={{ border: '1px solid #ccc', borderRadius: '8px' }}>
@@ -272,7 +305,7 @@ const DiagramList = () => {
                     </>
 
                 </div>
-                <DiagramModal handleSave={handleNameChange} defaultName={context.diagramName} defaultDesc={context.diagramDesc} />
+                <ListModal handleSave={handleNameChange} defaultName={diagramName} defaultDesc={diagramDesc} showModal={showModal} closeModal={closeModal} />
             </div>
         </>
 

@@ -25,4 +25,26 @@ export const main = handler(async (event) => {
         throw new Error('Could not parse document body!')
     }
 
+    console.log('Data', data)
+
+    try {
+        const updParams = {
+            TableName: process.env.TABLE_NAME,
+            Key: {
+                nameGroup: 'camelot',
+                diagramId: id
+            },
+            UpdateExpression: "SET diagramName = :n, description = :d",
+            ExpressionAttributeValues: {
+                ":n": data.diagramName,
+                ":d": data.diagramDesc
+            }
+        }
+        return await dynamoDb.update(updParams)
+    }
+    catch (err) {
+        console.log(err)
+        throw new Error('Diagram not found!')
+    }
+
 })
