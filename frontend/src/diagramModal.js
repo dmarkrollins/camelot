@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import Modal from 'react-foundation-modal'
 import { IoPodiumOutline } from 'react-icons/io5'
 

@@ -42,14 +42,14 @@ export const main = handler(async (event) => {
 
     const diagram = await s3.getObject(s3Params)
 
-    // console.log('The document', diagram.body)
+    console.log('The document', diagram.body)
 
     return {
         diagramId: row.Item.diagramId,
         diagramName: row.Item.diagramName,
         diagramDesc: row.Item.description,
         version: row.Item.version,
-        drawing: diagram.Body
+        drawing: diagram.Body.toString('utf-8')
     }
 
 });

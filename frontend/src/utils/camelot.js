@@ -33,4 +33,10 @@ Camelot.randomChoice = (choices) => {
     return choices[index];
 }
 
+Camelot.validateDiagramName = (name) => {
+    if (name.trim() === '' || name.trim().length < 5) {
+        throw new Error('Diagram name required and must be 5 characters or more!')
+    }
+}
+
 export default Camelot

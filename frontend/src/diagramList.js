@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import CamContext from './utils/camelotContext'
 import ListModal from './diagramModal'
 import { Sleep } from './utils/sleep'
+import Camelot from './utils/camelot'
 
 const DiagramList = () => {
 
@@ -198,8 +199,9 @@ const DiagramList = () => {
         const id = e.currentTarget.dataset.id
         setLoading(true)
         try {
+            context.clearDiagram()
             const response = await DataManager.getDrawing({ id })
-            context.setDiagram(response.diagramId, response.diagramName, response.diagramDesc, response.drawing)
+            context.setDiagram({ id: response.diagramId, name: response.diagramName, desc: response.diagramDesc, drawing: response.drawing })
             navigate('/draw')
         }
         catch (err) {
@@ -214,11 +216,12 @@ const DiagramList = () => {
         const id = e.currentTarget.dataset.id
         try {
             setLoading(true)
+            context.clearDiagram()
             const response = await DataManager.getDrawing({ id })
             console.log(response)
             setDiagramName(response.diagramName)
             setDiagramDesc(response.diagramDesc)
-            context.setDiagram(response.diagramId, response.diagramName, response.diagramDesc, response.drawing)
+            context.setDiagram({ id: response.diagramId, name: response.diagramName, desc: response.diagramDesc, drawing: response.drawing })
             Sleep(200)
             setShowModal(true)
         }
@@ -228,9 +231,9 @@ const DiagramList = () => {
     }
 
     const handleNameChange = async ({ diagramName = '', diagramDesc = '' }) => {
-        if (diagramName === '') {
-            throw new Error('Diagram Name required!')
-        }
+
+        Camelot.validateDiagramName(diagramName)
+
         try {
             setLoading(true)
             await DataManager.renameDrawing({ diagramId: context.diagramId, diagramName, diagramDesc })
@@ -243,6 +246,8 @@ const DiagramList = () => {
                 list[foundIndex].description = diagramDesc
                 setDiagrams(list)
             }
+
+            context.clearDiagram()
 
             setShowModal(false)
         }

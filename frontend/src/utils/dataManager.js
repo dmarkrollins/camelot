@@ -19,7 +19,7 @@ export class DataManager {
         const response = await API.post('camelot', '/diagrams', {
             body: { name, description, drawing, }
         })
-        console.log('Response', response.url, response.diagramId, response.diagramName, image.size, image.type)
+        // console.log('Response', response.url, response.diagramId, response.diagramName, image.size, image.type)
         try {
             // save thumbnail of diagram
             await axios.put(response.url, image, {

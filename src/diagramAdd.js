@@ -95,8 +95,7 @@ export const main = handler(async (event) => {
 
     return {
         url,
-        diagramId,
-        diagramName: name
+        diagramId
     }
 
 });

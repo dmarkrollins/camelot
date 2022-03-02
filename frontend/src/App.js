@@ -60,12 +60,12 @@ const App = () => {
             setCurrentDrawing(val)
         },
         clearDiagram: () => {
-            setCurrentId('')
+            setCurrentId(null)
             setCurrentName('')
             setCurrentDesc('')
-            setCurrentDrawing('')
+            setCurrentDrawing(null)
         },
-        setDiagram: (id, name, desc, drawing) => {
+        setDiagram: ({ id, name, desc, drawing = null }) => {
             setCurrentId(id)
             setCurrentName(name)
             setCurrentDesc(desc)

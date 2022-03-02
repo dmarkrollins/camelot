@@ -5,11 +5,11 @@ import Excalidraw, {
     exportToBlob
 } from "@excalidraw/excalidraw";
 import { Oval } from 'react-loader-spinner'
-import InitialData from "./initialData";
 import "./App.scss";
 import DiagramButtons from './diagramButtons'
 import CamContext from './utils/camelotContext'
 import Camelot from './utils/camelot'
+import { DataManager } from './utils/dataManager'
 
 const resolvablePromise = () => {
     let resolve;
@@ -24,7 +24,7 @@ const resolvablePromise = () => {
 };
 
 export default function Draw() {
-    const excalidrawRef = useRef(null);
+    const excalidrawRef = useRef({ promise: null });
     const context = useContext(CamContext)
     // const [diagram, setDiagram] = useState({})
     // const [viewModeEnabled, setViewModeEnabled] = useState(false);
@@ -35,32 +35,17 @@ export default function Draw() {
     // const [exportWithDarkMode, setExportWithDarkMode] = useState(false);
     // const [theme, setTheme] = useState("light");
 
-    const initialStatePromiseRef = useRef({ promise: null });
-    if (!initialStatePromiseRef.current.promise) {
-        initialStatePromiseRef.current.promise = resolvablePromise();
+    // const initialStatePromiseRef = useRef({ promise: null });
+
+    if (!excalidrawRef.current.promise) {
+        excalidrawRef.current.promise = resolvablePromise();
     }
+
     useEffect(() => {
-        // const fetchData = async () => {
-        //     const res = await fetch("/rocket.jpeg");
-        //     const imageData = await res.blob();
-        //     const reader = new FileReader();
-        //     reader.readAsDataURL(imageData);
 
-        //     reader.onload = function () {
-        //         const imagesArray = [
-        //             {
-        //                 id: "rocket",
-        //                 dataURL: reader.result,
-        //                 mimeType: "image/jpeg",
-        //                 created: 1644915140367
-        //             }
-        //         ];
-
-        //         initialStatePromiseRef.current.promise.resolve(InitialData);
-        //         excalidrawRef.current.addFiles(imagesArray);
-        //     };
-        // };
-        // fetchData();
+        // if (context.diagramId) {
+        //     excalidrawRef.current.updateScene(context.drawing)
+        // }
 
         const onHashChange = () => {
             const hash = new URLSearchParams(window.location.hash.slice(1));
@@ -94,6 +79,15 @@ export default function Draw() {
         Camelot.LocalStorage.set({ key: Camelot.Keys.LIBRARIES, value: items, isJson: true })
     }
 
+    const loadData = () => {
+        if (context.drawing) {
+            const drawing = JSON.parse(context.drawing)
+            drawing.scrollToContent = true
+            drawing.collaborators = []
+            return drawing
+        }
+    }
+
     return (
         <div className="App">
             <DiagramButtons xRef={excalidrawRef} />
@@ -109,9 +103,9 @@ export default function Draw() {
             <div className="excalidraw-wrapper">
                 <Excalidraw
                     ref={excalidrawRef}
-                    // initialData={initialStatePromiseRef.current.promise}
+                    initialData={loadData()}
                     // onChange={handleChange}
-                    libraryReturnUrl={window.location.href}
+                    libraryReturnUrl={`${window.location.href}/draw`}
                     onLibraryChange={handleLibraryChange}
                     viewModeEnabled={context.isReadOnly}
                     gridModeEnabled={context.gridEnabled}

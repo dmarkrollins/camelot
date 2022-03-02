@@ -6,7 +6,7 @@ import { IoCheckmarkDoneCircleOutline, IoChevronBackCircleOutline, IoTrashOutlin
 import { useNavigate } from "react-router-dom";
 import CamContext from './utils/camelotContext'
 import { exportToBlob } from "@excalidraw/excalidraw";
-// import Camelot from './utils/camelot'
+import Camelot from './utils/camelot'
 import { DataManager } from './utils/dataManager'
 import DiagramModal from './diagramModal'
 // import { v4 as uuidv4 } from 'uuid';
@@ -67,7 +67,6 @@ const DiagramButtons = ({ xRef }) => {
         finally {
             context.setIsSaving(false)
         }
-
     }
 
     const handleSave = async ({ diagramName = '', diagramDesc = '' }) => {
@@ -78,9 +77,7 @@ const DiagramButtons = ({ xRef }) => {
             throw new Error('Nothing drawn nothing to save!')
         }
 
-        if (diagramName.trim() === '' || diagramName.trim().length < 5) {
-            throw new Error('Diagram name required and must be 5 characters or more!')
-        }
+        Camelot.validateDiagramName(diagramName)
 
         const opts = {
             elements,
@@ -98,27 +95,25 @@ const DiagramButtons = ({ xRef }) => {
             files: xRef.current.getFiles()
         }
 
-        const description = diagramDesc
+        context.setIsSaving(true)
 
-        const name = diagramName
+        try {
 
-        if (name) {
-            context.setIsSaving(true)
-            try {
-
-                const response = await DataManager.saveDrawing({ name, description, drawing, image: blob })
-
-                context.setDiagramId(response.diagramId)
-                context.setDiagramName(response.diagramName)
-                context.setDiagramDesc(response.diagramDesc)
+            if (context.diagramId) {
+                await DataManager.modifyDrawing({ diagramId: context.diagramId, drawing, image: blob })
             }
-            catch (err) {
-                console.log(err)
-            }
-            finally {
-                context.setIsSaving(false)
+            else {
+                const response = await DataManager.saveDrawing({ diagramName, diagramDesc, drawing, image: blob })
+                context.setDiagram({ id: response.diagramId, name: diagramName, desc: diagramDesc, drawing })
             }
         }
+        catch (err) {
+            console.log(err)
+        }
+        finally {
+            context.setIsSaving(false)
+        }
+
     }
 
     const handleGrid = () => {
