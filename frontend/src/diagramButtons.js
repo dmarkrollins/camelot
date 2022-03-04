@@ -16,6 +16,8 @@ const DiagramButtons = ({ xRef }) => {
     const navigate = useNavigate()
     const context = useContext(CamContext)
 
+    const [showModal, setShowModal] = useState(false)
+
     const handleReturn = () => {
         navigate("/");
     }
@@ -56,10 +58,10 @@ const DiagramButtons = ({ xRef }) => {
         }
 
         context.setIsSaving(true)
+
         try {
-
             await DataManager.modifyDrawing({ diagramId, drawing, image: blob })
-
+            context.setDiagramDrawing(drawing)
         }
         catch (err) {
             console.log(err)
@@ -69,7 +71,7 @@ const DiagramButtons = ({ xRef }) => {
         }
     }
 
-    const handleSave = async ({ diagramName = '', diagramDesc = '' }) => {
+    const saveNewDiagram = async ({ diagramName = '', diagramDesc = '' }) => {
 
         const elements = xRef.current.getSceneElements()
 
@@ -98,14 +100,8 @@ const DiagramButtons = ({ xRef }) => {
         context.setIsSaving(true)
 
         try {
-
-            if (context.diagramId) {
-                await DataManager.modifyDrawing({ diagramId: context.diagramId, drawing, image: blob })
-            }
-            else {
-                const response = await DataManager.saveDrawing({ diagramName, diagramDesc, drawing, image: blob })
-                context.setDiagram({ id: response.diagramId, name: diagramName, desc: diagramDesc, drawing })
-            }
+            const response = await DataManager.saveDrawing({ diagramName, diagramDesc, drawing, image: blob })
+            context.setDiagram({ id: response.diagramId, name: diagramName, desc: diagramDesc, drawing })
         }
         catch (err) {
             console.log(err)
@@ -113,26 +109,26 @@ const DiagramButtons = ({ xRef }) => {
         finally {
             context.setIsSaving(false)
         }
-
     }
 
     const handleGrid = () => {
         context.setGridEnabled(!context.gridEnabled)
     }
 
-    const showModal = async () => {
+    const handleSave = async () => {
         if (xRef.current.getSceneElements().length > 0) {
 
             if (context.diagramId) {
-                return await handleModify(context.diagramId)
+                await handleModify({ diagramId: context.diagramId })
             }
-
-            await context.showModal()
+            else {
+                setShowModal(true)
+            }
         }
     }
 
-    const handleRename = () => {
-
+    const closeModal = () => {
+        setShowModal(false)
     }
 
     return (
@@ -140,11 +136,11 @@ const DiagramButtons = ({ xRef }) => {
             <div className="diagram-name">
                 {context.diagramName}
             </div>
-            <button type="button" className="camelot-button-active" title="Save Diagram" onClick={showModal}><IoCheckmarkDoneCircleOutline /><span className="button-title">Save</span></button>
+            <button type="button" className="camelot-button-active" title="Save Diagram" onClick={handleSave}><IoCheckmarkDoneCircleOutline /><span className="button-title">Save</span></button>
             <button type="button" className="camelot-button-active" title="Return To List" onClick={handleReturn}><IoChevronBackCircleOutline /><span className="button-title">Return</span></button>
             <button type="button" className="camelot-button-active" title="Clear Diagram" onClick={handleGrid}>{context.gridEnabled ? <IoSquareOutline /> : <IoAppsSharp />}<span className="button-title">Grid</span></button>
             <button type="button" className="camelot-button-active" title="Clear Diagram" onClick={handleClear}><IoTrashOutline /><span className="button-title">Clear</span></button>
-            <DiagramModal handleSave={handleSave} handleRename={handleRename} />
+            <DiagramModal handleSave={saveNewDiagram} showModal={showModal} closeModal={closeModal} />
         </div>
     )
 }

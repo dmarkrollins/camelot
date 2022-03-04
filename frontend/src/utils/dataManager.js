@@ -15,9 +15,9 @@ export class DataManager {
         return await API.del('camelot', `/diagrams/${id}`)
     }
 
-    static async saveDrawing({ name, description, drawing, image }) {
+    static async saveDrawing({ diagramName, diagramDesc, drawing, image }) {
         const response = await API.post('camelot', '/diagrams', {
-            body: { name, description, drawing, }
+            body: { name: diagramName, description: diagramDesc, drawing }
         })
         // console.log('Response', response.url, response.diagramId, response.diagramName, image.size, image.type)
         try {
@@ -37,6 +37,7 @@ export class DataManager {
     }
 
     static async modifyDrawing({ diagramId, drawing, image }) {
+
         const response = await API.put('camelot', `/diagrams/${diagramId}`, {
             body: { drawing }
         })

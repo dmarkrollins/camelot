@@ -37,15 +37,27 @@ export default function Draw() {
 
     // const initialStatePromiseRef = useRef({ promise: null });
 
-    if (!excalidrawRef.current.promise) {
-        excalidrawRef.current.promise = resolvablePromise();
+
+
+    const initialStatePromiseRef = useRef({ promise: null });
+
+    if (!initialStatePromiseRef.current.promise) {
+        initialStatePromiseRef.current.promise = resolvablePromise();
     }
 
     useEffect(() => {
 
-        // if (context.diagramId) {
-        //     excalidrawRef.current.updateScene(context.drawing)
-        // }
+        setTimeout(() => {
+            let content = null
+
+            if (context.drawing) {
+                content = JSON.parse(context.drawing)
+                content.scrollToContent = true
+                content.appState = { viewBackgroundColor: "#FFFFFF", currentItemFontFamily: 1 }
+            }
+
+            initialStatePromiseRef.current.promise.resolve(content);
+        }, 250);
 
         const onHashChange = () => {
             const hash = new URLSearchParams(window.location.hash.slice(1));
@@ -58,7 +70,7 @@ export default function Draw() {
         return () => {
             window.removeEventListener("hashchange", onHashChange);
         };
-    }, []);
+    }, [context.drawing]);
 
     const onLinkOpen = useCallback((element, event) => {
         const link = element.link;
@@ -79,15 +91,6 @@ export default function Draw() {
         Camelot.LocalStorage.set({ key: Camelot.Keys.LIBRARIES, value: items, isJson: true })
     }
 
-    const loadData = () => {
-        if (context.drawing) {
-            const drawing = JSON.parse(context.drawing)
-            drawing.scrollToContent = true
-            drawing.collaborators = []
-            return drawing
-        }
-    }
-
     return (
         <div className="App">
             <DiagramButtons xRef={excalidrawRef} />
@@ -103,7 +106,7 @@ export default function Draw() {
             <div className="excalidraw-wrapper">
                 <Excalidraw
                     ref={excalidrawRef}
-                    initialData={loadData()}
+                    initialData={initialStatePromiseRef.current.promise}
                     // onChange={handleChange}
                     libraryReturnUrl={`${window.location.href}/draw`}
                     onLibraryChange={handleLibraryChange}

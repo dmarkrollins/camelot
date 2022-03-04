@@ -120,7 +120,9 @@ const DiagramList = () => {
                 break
             }
 
-            const thumbUrl = `https://${diagrams[i].thumbsBucket}.s3.amazonaws.com/${diagrams[i].thumbNail}`
+            const timestamp = new Date().getTime();
+
+            const thumbUrl = `https://${diagrams[i].thumbsBucket}.s3.amazonaws.com/${diagrams[i].thumbNail}?t=${timestamp}`
 
             list.push(<tr key={diagrams[i].diagramId}>
                 <td align="camelot-item">

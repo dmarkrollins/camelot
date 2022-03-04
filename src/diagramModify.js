@@ -18,6 +18,8 @@ export const main = handler(async (event) => {
         throw new Error("Could not parse input!");
     }
 
+    console.log('The ID', id)
+
     let data
 
     try {
@@ -33,13 +35,14 @@ export const main = handler(async (event) => {
         Key: {
             nameGroup: 'camelot',
             diagramId: id
-        }
-    }
+        },
+        ProjectionExpression: "diagramId, diagramName, description, version, objectKey, thumbNail"
+    };
 
     // store reference
-    let diagram
+    let row
     try {
-        diagram = await dynamoDb.get(params)
+        row = await dynamoDb.get(params)
     }
     catch (err) {
         console.log(err)
@@ -48,7 +51,7 @@ export const main = handler(async (event) => {
 
     const s3params = {
         Bucket: process.env.BUCKET_NAME,
-        Key: diagram.objectKey,
+        Key: row.Item.objectKey,
         Body: JSON.stringify(data.drawing),
         ContentType: 'application/json'
     }
@@ -60,7 +63,7 @@ export const main = handler(async (event) => {
     console.log('After putting all objects')
 
     // TODO: need to update the version on the diagram in dynamo
-    const newVersion = diagram.version += 1
+    const newVersion = row.Item.version += 1
 
     try {
         const updParams = {
@@ -69,10 +72,8 @@ export const main = handler(async (event) => {
                 nameGroup: 'camelot',
                 diagramId: id
             },
-            UpdateExpression: "diagramName = :n, diagramDesc = :d, version=:v",
+            UpdateExpression: "SET version=:v",
             ExpressionAttributeValues: {
-                ":n": data.diagramName,
-                ":d": data.diagramDesc,
                 ":v": newVersion
             }
         }
@@ -80,10 +81,10 @@ export const main = handler(async (event) => {
     }
     catch (err) {
         console.log(err)
-        throw new Error('Diagram not found!')
+        throw new Error('Diagram update error!')
     }
 
-    const url = await GetSignedUrlForFile({ bucket: process.env.THUMBS_BUCKET, fileName: diagram.thumbNail })
+    const url = await GetSignedUrlForFile({ bucket: process.env.THUMBS_BUCKET, fileName: row.Item.thumbNail })
 
     console.log('The Url', url)
 
