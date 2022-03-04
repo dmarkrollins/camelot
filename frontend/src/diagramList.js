@@ -12,6 +12,7 @@ import moment from 'moment'
 import { useNavigate } from "react-router-dom";
 import CamContext from './utils/camelotContext'
 import ListModal from './diagramModal'
+import ConfirmModal, { ConfirmTypes } from './confirmModal'
 import { Sleep } from './utils/sleep'
 import Camelot from './utils/camelot'
 
@@ -29,6 +30,8 @@ const DiagramList = () => {
     const [showModal, setShowModal] = useState(false)
     const [diagramName, setDiagramName] = useState('')
     const [diagramDesc, setDiagramDesc] = useState('')
+    const [showConfirm, setShowConfirm] = useState(false)
+    const [retVal, setRetVal] = useState(false)
 
     const searchHandler = useCallback(debounce((val) => {
         setSearch(val)
@@ -191,12 +194,19 @@ const DiagramList = () => {
         navigate('/draw')
     }
 
+    const handleConfirmResponse = (val) => {
+        if (val) {
+            removeItem(val)
+        }
+        setShowConfirm(false)
+    }
+
     const handleRemove = async (e) => {
         const id = e.currentTarget.dataset.id
-        if (confirm('Are you sure?')) {
-            removeItem(id)
-        }
+        setRetVal(id)
+        setShowConfirm(true)
     }
+
     const handleModify = async (e) => {
         const id = e.currentTarget.dataset.id
         setLoading(true)
@@ -220,7 +230,7 @@ const DiagramList = () => {
             setLoading(true)
             context.clearDiagram()
             const response = await DataManager.getDrawing({ id })
-            console.log(response)
+            // console.log(response)
             setDiagramName(response.diagramName)
             setDiagramDesc(response.diagramDesc)
             context.setDiagram({ id: response.diagramId, name: response.diagramName, desc: response.diagramDesc, drawing: response.drawing })
@@ -313,6 +323,7 @@ const DiagramList = () => {
 
                 </div>
                 <ListModal handleSave={handleNameChange} defaultName={diagramName} defaultDesc={diagramDesc} showModal={showModal} closeModal={closeModal} />
+                <ConfirmModal handleResult={handleConfirmResponse} confirmType={ConfirmTypes.ALERT} returnValue={retVal} showModal={showConfirm} defaultPrompt='Are you sure you want to PERMANENTLY delete this digram?' title='Delete Diagram' />
             </div>
         </>
 

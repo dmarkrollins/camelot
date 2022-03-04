@@ -77,8 +77,8 @@ const DiagramModal = ({ handleSave, defaultName = '', defaultDesc = '', showModa
                                 {errMessage}
                             </div>
 
-                            <div className="cell small-12 text-center" style={{ marginTop: '7px' }}>
-                                <button id="btnSave" type='button' className="dialog-button" data-close="" onClick={saveAndClose}>Save</button>
+                            <div className="cell small-12 text-center save-button" style={{ marginTop: '7px' }}>
+                                <button id="btnSave" type='button' data-close="" onClick={saveAndClose}>Save</button>
                             </div>
                         </div>
                     </div>

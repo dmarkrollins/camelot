@@ -6,11 +6,11 @@ Camelot.Keys = {
 }
 
 Camelot.LocalStorage = {
-    set: function (key, value, isJson = false) {
+    set: function ({ key, value, isJson = false }) {
         const val = isJson ? JSON.stringify(value) : value
         localStorage.setItem(key, val)
     },
-    get: function (key, defaultValue = '', isJson = false) {
+    get: function ({ key, defaultValue = '', isJson = false }) {
         const defaultRetVal = defaultValue || ''
 
         const val = localStorage.getItem(key) || defaultRetVal

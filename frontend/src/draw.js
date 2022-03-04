@@ -1,15 +1,10 @@
-import React, { useEffect, useState, useRef, useCallback, useContext } from "react";
-import Excalidraw, {
-    exportToCanvas,
-    exportToSvg,
-    exportToBlob
-} from "@excalidraw/excalidraw";
+import React, { useEffect, useRef, useCallback, useContext, useMemo } from "react";
+import Excalidraw from "@excalidraw/excalidraw";
 import { Oval } from 'react-loader-spinner'
 import "./App.scss";
 import DiagramButtons from './diagramButtons'
 import CamContext from './utils/camelotContext'
 import Camelot from './utils/camelot'
-import { DataManager } from './utils/dataManager'
 
 const resolvablePromise = () => {
     let resolve;
@@ -24,20 +19,7 @@ const resolvablePromise = () => {
 };
 
 export default function Draw() {
-    const excalidrawRef = useRef({ promise: null });
     const context = useContext(CamContext)
-    // const [diagram, setDiagram] = useState({})
-    // const [viewModeEnabled, setViewModeEnabled] = useState(false);
-    // const [zenModeEnabled, setZenModeEnabled] = useState(false);
-    // const [gridModeEnabled, setGridModeEnabled] = useState(context.gridEnabled);
-    // const [blobUrl, setBlobUrl] = useState(null);
-    // const [canvasUrl, setCanvasUrl] = useState(null);
-    // const [exportWithDarkMode, setExportWithDarkMode] = useState(false);
-    // const [theme, setTheme] = useState("light");
-
-    // const initialStatePromiseRef = useRef({ promise: null });
-
-
 
     const initialStatePromiseRef = useRef({ promise: null });
 
@@ -45,19 +27,64 @@ export default function Draw() {
         initialStatePromiseRef.current.promise = resolvablePromise();
     }
 
+    const excalidrawRef = useMemo(
+        () => ({
+            current: {
+                readyPromise: resolvablePromise()
+            }
+        }),
+        []
+    );
+
     useEffect(() => {
 
-        setTimeout(() => {
+        const getContent = () => {
             let content = null
 
             if (context.drawing) {
+                // existing diagram
                 content = JSON.parse(context.drawing)
-                content.scrollToContent = true
                 content.appState = { viewBackgroundColor: "#FFFFFF", currentItemFontFamily: 1 }
             }
+            else {
+                // new diagram
+                content = {
+                    elements: [],
+                    appState: { viewBackgroundColor: "#FFFFFF", currentItemFontFamily: 1 }
+                }
+            }
 
-            initialStatePromiseRef.current.promise.resolve(content);
-        }, 250);
+            content.scrollToContent = true
+
+            const libraries = Camelot.LocalStorage.get({ key: Camelot.Keys.LIBRARIES, defaultValue: null, isJson: true })
+
+            if (libraries) {
+                content.libraryItems = libraries
+            }
+
+            return content
+
+        }
+
+        excalidrawRef.current.readyPromise.then((api) => {
+            initialStatePromiseRef.current.promise.resolve(getContent());
+            // api.updateScene(getContent())
+        });
+        // }, [excalidrawRef, context.drawing]);
+
+        // useEffect(() => {
+
+        //     setTimeout(() => {
+        //         let content = null
+
+        //         if (context.drawing) {
+        //             content = JSON.parse(context.drawing)
+        //             content.scrollToContent = true
+        //             content.appState = { viewBackgroundColor: "#FFFFFF", currentItemFontFamily: 1 }
+        //         }
+
+        //         initialStatePromiseRef.current.promise.resolve(content);
+        //     }, 250);
 
         const onHashChange = () => {
             const hash = new URLSearchParams(window.location.hash.slice(1));
@@ -70,7 +97,7 @@ export default function Draw() {
         return () => {
             window.removeEventListener("hashchange", onHashChange);
         };
-    }, [context.drawing]);
+    }, [excalidrawRef, context.drawing]);
 
     const onLinkOpen = useCallback((element, event) => {
         const link = element.link;
@@ -108,7 +135,7 @@ export default function Draw() {
                     ref={excalidrawRef}
                     initialData={initialStatePromiseRef.current.promise}
                     // onChange={handleChange}
-                    libraryReturnUrl={`${window.location.href}/draw`}
+                    libraryReturnUrl={window.location.href}
                     onLibraryChange={handleLibraryChange}
                     viewModeEnabled={context.isReadOnly}
                     gridModeEnabled={context.gridEnabled}
