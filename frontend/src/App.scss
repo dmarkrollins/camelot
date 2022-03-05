@@ -176,6 +176,24 @@
       top: -2px;
   }
 
+  div.camelot-button-wrapper div.diagram-name {
+    font-size: .8em;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 175px;
+    margin: 0 auto;
+    text-align: center;
+    // border: 1px solid #ccc;
+    color: #A55640;
+    margin-top: 0px;
+    position: block;
+    font-weight: 600;
+    margin-top: -7px;
+    margin-bottom: 5px;
+    z-index: -999;
+}
+
   button.camelot-button-active {
     color: #A55640;
   }
@@ -195,47 +213,96 @@
 
   .camelot-button-wrapper-inline {
     position: relative;
-    width: 100px;
+    width: 150px;
     height: 48px;
-    z-index: 99999;
+    z-index: 9;
     float: left;
 }
 
-div.camelot-button-wrapper div.diagram-name {
-    font-size: .8em;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    max-width: 175px;
-    margin: 0 auto;
-    text-align: center;
-    // border: 1px solid #ccc;
-    color: #A55640;
-    margin-top: 0px;
-    position: block;
-    font-weight: 600;
-    margin-top: -7px;
-    margin-bottom: 5px;
-}
-
 .camelot-button-wrapper-inline button {
-  width: 32px;
-  height: 32px;
-  font-size: 1.75em;
-  margin-right: 12px;
+  width: 38px;
+  height: 48px;
+  font-size: 1.5em;
+  margin-right: 7px;
+  text-align: center;
 }
 
 //   .camelot-button-wrapper button:hover {
 //       cursor: pointer;
 //   }
 
-.camelot-button-wrapper-inline button span.button-title {
-    font-size: 8pt;
-    display: block;
-    position: relative;
-    top: -2px;
+.camelot-button-wrapper-inline button div.button-title {
+    font-size: 7pt;
+    // display: block;
+    // margin: 0 auto;
+    // position: relative;
+    // top: -2px;
+    // text-align: center;
 }
 
 .radius-8 {
     border-radius: 8px !important;
 }
+
+.dialog-top {
+    z-index: 999 !important;
+}
+
+.spinner {
+    z-index: 9999 !important;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-top: -50px; //Half of the height of the loading graphic
+    margin-left: -50px; //Half of the width of the loading graphic
+}
+
+// div.save-button button {
+//     width: 100px;
+//     border: 1px solid #A55640;
+//     font-size: 1em;
+//     border-radius: 4px;
+//     color: #A55640;
+//     cursor: pointer;
+//     height: 32px;
+// }
+
+// div.save-button button: {
+// }
+
+div.save-button button {
+    position: relative;
+    background-color: #fff;
+    border: 1px solid #A55640;
+    font-size: 1em;
+    border-radius: 4px;
+    color: #A55640;
+    padding: 3px;
+    width: 100px;
+    text-align: center;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    text-decoration: none;
+    overflow: hidden;
+    cursor: pointer;
+  }
+  
+  div.save-button button:after {
+    content: "";
+    background: #A55640;
+    display: block;
+    position: absolute;
+    padding-top: 300%;
+    padding-left: 350%;
+    margin-left: -20px!important;
+    margin-top: -120%;
+    opacity: 0;
+    transition: all 0.5s
+  }
+  
+  div.save-button button:active:after {
+    padding: 0;
+    margin: 0;
+    opacity: 1;
+    transition: 0s
+  }

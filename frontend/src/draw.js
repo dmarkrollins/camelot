@@ -1,11 +1,6 @@
-import React, { useEffect, useState, useRef, useCallback, useContext } from "react";
-import Excalidraw, {
-    exportToCanvas,
-    exportToSvg,
-    exportToBlob
-} from "@excalidraw/excalidraw";
+import React, { useEffect, useRef, useCallback, useContext, useMemo } from "react";
+import Excalidraw from "@excalidraw/excalidraw";
 import { Oval } from 'react-loader-spinner'
-import InitialData from "./initialData";
 import "./App.scss";
 import DiagramButtons from './diagramButtons'
 import CamContext from './utils/camelotContext'
@@ -24,43 +19,72 @@ const resolvablePromise = () => {
 };
 
 export default function Draw() {
-    const excalidrawRef = useRef(null);
     const context = useContext(CamContext)
-    // const [diagram, setDiagram] = useState({})
-    // const [viewModeEnabled, setViewModeEnabled] = useState(false);
-    // const [zenModeEnabled, setZenModeEnabled] = useState(false);
-    // const [gridModeEnabled, setGridModeEnabled] = useState(context.gridEnabled);
-    // const [blobUrl, setBlobUrl] = useState(null);
-    // const [canvasUrl, setCanvasUrl] = useState(null);
-    // const [exportWithDarkMode, setExportWithDarkMode] = useState(false);
-    // const [theme, setTheme] = useState("light");
 
     const initialStatePromiseRef = useRef({ promise: null });
+
     if (!initialStatePromiseRef.current.promise) {
         initialStatePromiseRef.current.promise = resolvablePromise();
     }
+
+    const excalidrawRef = useMemo(
+        () => ({
+            current: {
+                readyPromise: resolvablePromise()
+            }
+        }),
+        []
+    );
+
     useEffect(() => {
-        // const fetchData = async () => {
-        //     const res = await fetch("/rocket.jpeg");
-        //     const imageData = await res.blob();
-        //     const reader = new FileReader();
-        //     reader.readAsDataURL(imageData);
 
-        //     reader.onload = function () {
-        //         const imagesArray = [
-        //             {
-        //                 id: "rocket",
-        //                 dataURL: reader.result,
-        //                 mimeType: "image/jpeg",
-        //                 created: 1644915140367
-        //             }
-        //         ];
+        const getContent = () => {
+            let content = null
 
-        //         initialStatePromiseRef.current.promise.resolve(InitialData);
-        //         excalidrawRef.current.addFiles(imagesArray);
-        //     };
-        // };
-        // fetchData();
+            if (context.drawing) {
+                // existing diagram
+                content = JSON.parse(context.drawing)
+                content.appState = { viewBackgroundColor: "#FFFFFF", currentItemFontFamily: 1 }
+            }
+            else {
+                // new diagram
+                content = {
+                    elements: [],
+                    appState: { viewBackgroundColor: "#FFFFFF", currentItemFontFamily: 1 }
+                }
+            }
+
+            content.scrollToContent = true
+
+            const libraries = Camelot.LocalStorage.get({ key: Camelot.Keys.LIBRARIES, defaultValue: null, isJson: true })
+
+            if (libraries) {
+                content.libraryItems = libraries
+            }
+
+            return content
+
+        }
+
+        excalidrawRef.current.readyPromise.then((api) => {
+            initialStatePromiseRef.current.promise.resolve(getContent());
+            // api.updateScene(getContent())
+        });
+        // }, [excalidrawRef, context.drawing]);
+
+        // useEffect(() => {
+
+        //     setTimeout(() => {
+        //         let content = null
+
+        //         if (context.drawing) {
+        //             content = JSON.parse(context.drawing)
+        //             content.scrollToContent = true
+        //             content.appState = { viewBackgroundColor: "#FFFFFF", currentItemFontFamily: 1 }
+        //         }
+
+        //         initialStatePromiseRef.current.promise.resolve(content);
+        //     }, 250);
 
         const onHashChange = () => {
             const hash = new URLSearchParams(window.location.hash.slice(1));
@@ -73,7 +97,7 @@ export default function Draw() {
         return () => {
             window.removeEventListener("hashchange", onHashChange);
         };
-    }, []);
+    }, [excalidrawRef, context.drawing]);
 
     const onLinkOpen = useCallback((element, event) => {
         const link = element.link;
@@ -109,7 +133,7 @@ export default function Draw() {
             <div className="excalidraw-wrapper">
                 <Excalidraw
                     ref={excalidrawRef}
-                    // initialData={initialStatePromiseRef.current.promise}
+                    initialData={initialStatePromiseRef.current.promise}
                     // onChange={handleChange}
                     libraryReturnUrl={window.location.href}
                     onLibraryChange={handleLibraryChange}

@@ -8,7 +8,7 @@ export const main = handler(async (event) => {
 
     let data
 
-    console.log('The Body', event.body)
+    // console.log('The Body', event.body)
 
     try {
         data = JSON.parse(event.body)
@@ -57,10 +57,10 @@ export const main = handler(async (event) => {
     }
 
     // store diagram
-    console.log('Before putting dialog object', process.env.BUCKET_NAME, s3params)
+    // console.log('Before putting dialog object', process.env.BUCKET_NAME, s3params)
     await s3.putObject(s3params)
 
-    console.log('After putting all objects')
+    // console.log('After putting all objects')
 
     // const tagParams = {
 
@@ -91,12 +91,11 @@ export const main = handler(async (event) => {
 
     const url = await GetSignedUrlForFile({ bucket: process.env.THUMBS_BUCKET, fileName: thumbNail })
 
-    console.log('The Url', url)
+    // console.log('The Url', url)
 
     return {
         url,
-        diagramId,
-        diagramName: name
+        diagramId
     }
 
 });

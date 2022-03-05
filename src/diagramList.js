@@ -11,36 +11,21 @@ export const main = handler(async (event) => {
         searchVal = querystring.search
     }
 
-    console.log('Search Val', searchVal)
-
-    // ExpressionAttributeValues: {
-    //     ':search': { S: searchVal }
-    // },
-    // KeyConditionExpression: 'begins_with ( diagramName, :search )'
-
-    // const params = {
-    //     TableName: process.env.TABLE_NAME,
-    //     Limit: 50,
-    // }
-
-    // 
+    // console.log('Search Val', searchVal)
 
     const params = {
         TableName: process.env.TABLE_NAME,
         Limit: 50
     }
 
-    // params.ExpressionAttributeNames = {
-    //     "#diagram_name": "diagramName",
-    //     "#name_group": "nameGroup"
-    // }
-
     if (searchVal > '') {
         params.IndexName = 'nameIndex'
         params.ConsistentRead = false
-        params.KeyConditionExpression = "nameGroup = :group and begins_with(searchName, :search)"
+        params.KeyConditionExpression = "nameGroup = :group"
+        params.FilterExpression = "contains(diagramName, :search)"
+        // params.KeyConditionExpression = "nameGroup = :group and begins_with(searchName, :search)"
         params.ExpressionAttributeValues = {
-            ":search": searchVal.toLowerCase(),
+            ":search": searchVal,
             ":group": 'camelot'
         }
     }

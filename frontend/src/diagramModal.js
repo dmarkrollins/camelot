@@ -1,18 +1,19 @@
-import React, { useContext, useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Modal from 'react-foundation-modal'
-import CamContext from './utils/camelotContext'
 import { IoPodiumOutline } from 'react-icons/io5'
 
-const DiagramModal = ({ handleSave }) => {
+const DiagramModal = ({ handleSave, defaultName = '', defaultDesc = '', showModal = false, closeModal }) => {
 
-    const context = useContext(CamContext)
     const [diagramName, setName] = useState('')
     const [diagramDesc, setDesc] = useState('')
     const [errMessage, setErrMessage] = useState('')
 
-    const hideModal = () => {
-        context.hideModal()
-    }
+    useEffect(() => {
+        setName(defaultName)
+        setDesc(defaultDesc)
+        setErrMessage('')
+        // console.log('Modal use effect')
+    }, [defaultName, defaultDesc])
 
     const nameChange = (event) => {
         setName(event.target.value)
@@ -26,7 +27,7 @@ const DiagramModal = ({ handleSave }) => {
         try {
             setErrMessage('')
             await handleSave({ diagramName, diagramDesc })
-            context.hideModal()
+            closeModal()
         }
         catch (err) {
             setErrMessage(err.message)
@@ -36,10 +37,10 @@ const DiagramModal = ({ handleSave }) => {
     return (
 
         <Modal
-            open={context.isModalVisible}
-            closeModal={context.hideModal}
+            open={showModal}
+            closeModal={closeModal}
             isModal={true}
-            size="tiny radius-8 animate__animated animate__zoomIn"
+            size="dialog-top tiny radius-8 animate__animated animate__zoomIn"
         >
             <div className="grid-container">
                 <div className="grid-x" >
@@ -47,7 +48,7 @@ const DiagramModal = ({ handleSave }) => {
                         <div className="grid-x ">
                             <div className="cell small-12" >
                                 <div className="preferences-title float-left"><IoPodiumOutline style={{ color: '#A55640', fontSize: '1.5em', marginRight: '9px' }} /><div style={{ position: 'relative', display: 'inline', top: '-5px', fontSize: '1.2em' }}>Diagram Details</div></div>
-                                <button id="btnClose" className="close-button float-right" aria-label="Close modal" type="button" onClick={hideModal}>
+                                <button id="btnClose" className="close-button float-right" aria-label="Close modal" type="button" onClick={closeModal}>
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
@@ -76,8 +77,8 @@ const DiagramModal = ({ handleSave }) => {
                                 {errMessage}
                             </div>
 
-                            <div className="cell small-12 text-center">
-                                <button id="btnSave" type='button' style={{ width: '75px', border: '1px solid #A55640', fontSize: '1em', borderRadius: '4px', color: '#A55640', cursor: 'pointer' }} data-close="" onClick={saveAndClose}>Save</button>
+                            <div className="cell small-12 text-center save-button" style={{ marginTop: '7px' }}>
+                                <button id="btnSave" type='button' data-close="" onClick={saveAndClose}>Save</button>
                             </div>
                         </div>
                     </div>

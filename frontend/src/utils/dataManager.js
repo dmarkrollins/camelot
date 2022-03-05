@@ -15,11 +15,11 @@ export class DataManager {
         return await API.del('camelot', `/diagrams/${id}`)
     }
 
-    static async saveDrawing({ name, description, drawing, image }) {
+    static async saveDrawing({ diagramName, diagramDesc, drawing, image }) {
         const response = await API.post('camelot', '/diagrams', {
-            body: { name, description, drawing, }
+            body: { name: diagramName, description: diagramDesc, drawing }
         })
-        console.log('Response', response.url, response.diagramId, response.diagramName, image.size, image.type)
+        // console.log('Response', response.url, response.diagramId, response.diagramName, image.size, image.type)
         try {
             // save thumbnail of diagram
             await axios.put(response.url, image, {
@@ -37,10 +37,11 @@ export class DataManager {
     }
 
     static async modifyDrawing({ diagramId, drawing, image }) {
+
         const response = await API.put('camelot', `/diagrams/${diagramId}`, {
             body: { drawing }
         })
-        console.log('Response', response.url, image.size, image.type)
+        // console.log('Response', response.url, image.size, image.type)
         try {
             // save thumbnail of diagram
             await axios.put(response.url, image, {
@@ -50,6 +51,12 @@ export class DataManager {
         catch (err) {
             console.log('Thumbnail upload error-----------------------\n', err)
         }
+    }
+
+    static async renameDrawing({ diagramId, diagramName, diagramDesc }) {
+        return await API.put('camelot', `/rename/${diagramId}`, {
+            body: { diagramName, diagramDesc }
+        })
     }
 
 }
