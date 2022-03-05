@@ -21,9 +21,11 @@ export const main = handler(async (event) => {
     if (searchVal > '') {
         params.IndexName = 'nameIndex'
         params.ConsistentRead = false
-        params.KeyConditionExpression = "nameGroup = :group and begins_with(searchName, :search)"
+        params.KeyConditionExpression = "nameGroup = :group"
+        params.FilterExpression = "contains(diagramName, :search)"
+        // params.KeyConditionExpression = "nameGroup = :group and begins_with(searchName, :search)"
         params.ExpressionAttributeValues = {
-            ":search": searchVal.toLowerCase(),
+            ":search": searchVal,
             ":group": 'camelot'
         }
     }

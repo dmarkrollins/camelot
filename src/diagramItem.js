@@ -42,7 +42,7 @@ export const main = handler(async (event) => {
 
     const diagram = await s3.getObject(s3Params)
 
-    console.log('The document', diagram.body)
+    // console.log('The document', diagram.body)
 
     return {
         diagramId: row.Item.diagramId,

@@ -25,7 +25,7 @@ export const main = handler(async (event) => {
         throw new Error('Could not parse document body!')
     }
 
-    console.log('Data', data)
+    // console.log('Data', data)
 
     try {
         const updParams = {

@@ -18,7 +18,7 @@ export const main = handler(async (event) => {
         throw new Error("Could not parse input!");
     }
 
-    console.log('The ID', id)
+    // console.log('The ID', id)
 
     let data
 
@@ -57,10 +57,10 @@ export const main = handler(async (event) => {
     }
 
     // store diagram
-    console.log('Before putting dialog object', process.env.BUCKET_NAME, s3params)
+    // console.log('Before putting dialog object', process.env.BUCKET_NAME, s3params)
     await s3.putObject(s3params)
 
-    console.log('After putting all objects')
+    // console.log('After putting all objects')
 
     // TODO: need to update the version on the diagram in dynamo
     const newVersion = row.Item.version += 1
@@ -86,7 +86,7 @@ export const main = handler(async (event) => {
 
     const url = await GetSignedUrlForFile({ bucket: process.env.THUMBS_BUCKET, fileName: row.Item.thumbNail })
 
-    console.log('The Url', url)
+    // console.log('The Url', url)
 
     return {
         url
