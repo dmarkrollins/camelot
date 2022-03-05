@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import {
     Route,
-    Routes
+    Routes,
+    Redirect
 } from "react-router-dom"
 import Draw from './draw'
 import Diagrams from './diagrams'
 import { CamelotProvider } from './utils/camelotContext'
+import Redirector from './redirector'
 
 const App = () => {
 
@@ -80,6 +82,7 @@ const App = () => {
                 <Route path="/" element={<Diagrams />} />
                 <Route path="/view/:id" element={<Draw readonly={true} />} />
                 <Route path="/draw" element={<Draw />} />
+                <Route path="/draw/:id" element={<Redirector />} />
             </Routes>
         </CamelotProvider >
     )

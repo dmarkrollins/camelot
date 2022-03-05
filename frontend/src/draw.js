@@ -5,6 +5,9 @@ import "./App.scss";
 import DiagramButtons from './diagramButtons'
 import CamContext from './utils/camelotContext'
 import Camelot from './utils/camelot'
+import { useParams } from "react-router-dom";
+import { DataManager } from './utils/dataManager'
+import { Sleep } from "./utils/sleep";
 
 const resolvablePromise = () => {
     let resolve;
@@ -38,7 +41,8 @@ export default function Draw() {
 
     useEffect(() => {
 
-        const getContent = () => {
+        const getContent = async () => {
+
             let content = null
 
             if (context.drawing) {

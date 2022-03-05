@@ -213,7 +213,7 @@
 
   .camelot-button-wrapper-inline {
     position: relative;
-    width: 150px;
+    min-width: 175px;
     height: 48px;
     z-index: 9;
     float: left;
@@ -305,4 +305,8 @@ div.save-button button {
     margin: 0;
     opacity: 1;
     transition: 0s
+  }
+
+  .camelot-toast-message {
+    color: #A55640; 
   }
