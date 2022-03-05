@@ -159,7 +159,7 @@ const DiagramList = () => {
                             </div>
                         </div>
                         <div className="column small-6 text-right" style={{ fontSize: '.7em' }}>
-                            <div style={{ position: 'relative', top: '21px', color: '#ccc' }}>Version {formatVersion(diagrams[i].version)} - {formatDate(diagrams[i].createdAt)}</div>
+                            <div style={{ position: 'relative', top: '21px', color: '#ccc' }}>Version {formatVersion(diagrams[i].version)} - {diagrams[i].modifiedAt ? formatDate(diagrams[i].modifiedAt) : formatDate(diagrams[i].createdAt)}</div>
                         </div>
                     </div>
 
@@ -337,7 +337,7 @@ const DiagramList = () => {
 
                 </div>
                 <ListModal handleSave={handleNameChange} defaultName={diagramName} defaultDesc={diagramDesc} showModal={showModal} closeModal={closeModal} />
-                <ConfirmModal handleResult={handleConfirmResponse} confirmType={ConfirmTypes.ALERT} returnValue={retVal} showModal={showConfirm} defaultPrompt='Are you sure you want to PERMANENTLY delete this digram?' title='Delete Diagram' />
+                <ConfirmModal handleResult={handleConfirmResponse} confirmType={ConfirmTypes.ALERT} returnValue={retVal} showModal={showConfirm} defaultPrompt='Are you sure you want to PERMANENTLY delete this diagram?' title='Delete Diagram' />
                 <ToastContainer
                     position="top-center"
                     autoClose={1000}

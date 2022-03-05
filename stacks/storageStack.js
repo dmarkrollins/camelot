@@ -30,15 +30,6 @@ export default class StorageStack extends sst.Stack {
             removalPolicy: RemovalPolicy.DESTROY
         });
 
-        // preload diagrams
-        // new Script(this, "Script", {
-        //     defaultFunctionProps: {
-        //         environment: { tableName: this.table.tableName },
-        //         permissions: [this.table],
-        //     },
-        //     onCreate: "src/seedDatabase.main",
-        // });
-
         // with CORS to support uploading from cross origin
         this.siteBucket = new sst.Bucket(this, "sitebucket", {
             s3Bucket: {

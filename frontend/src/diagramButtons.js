@@ -9,6 +9,7 @@ import { exportToBlob } from "@excalidraw/excalidraw";
 import Camelot from './utils/camelot'
 import { DataManager } from './utils/dataManager'
 import DiagramModal from './diagramModal'
+import ConfirmModal, { ConfirmTypes } from './confirmModal'
 // import { v4 as uuidv4 } from 'uuid';
 // import ResizeBlob from './utils/resizeBlob'
 
@@ -17,16 +18,14 @@ const DiagramButtons = ({ xRef }) => {
     const context = useContext(CamContext)
 
     const [showModal, setShowModal] = useState(false)
+    const [showConfirm, setShowConfirm] = useState(false)
 
     const handleReturn = () => {
         navigate("/");
     }
 
     const handleClear = () => {
-        const value = confirm('Are you sure?')
-        if (value) {
-            xRef.current.resetScene({ resetLoadingState: true })
-        }
+        setShowConfirm(true)
     }
 
     const handleModify = async ({ diagramId = '' }) => {
@@ -131,6 +130,17 @@ const DiagramButtons = ({ xRef }) => {
         setShowModal(false)
     }
 
+    const handleConfirmResponse = (value) => {
+        try {
+            if (value) {
+                xRef.current.resetScene({ resetLoadingState: true })
+            }
+        }
+        finally {
+            setShowConfirm(false)
+        }
+    }
+
     return (
         <div className="camelot-button-wrapper">
             <div className="diagram-name">
@@ -141,6 +151,8 @@ const DiagramButtons = ({ xRef }) => {
             <button type="button" className="camelot-button-active" title="Clear Diagram" onClick={handleGrid}>{context.gridEnabled ? <IoSquareOutline /> : <IoAppsSharp />}<span className="button-title">Grid</span></button>
             <button type="button" className="camelot-button-active" title="Clear Diagram" onClick={handleClear}><IoTrashOutline /><span className="button-title">Clear</span></button>
             <DiagramModal handleSave={saveNewDiagram} showModal={showModal} closeModal={closeModal} />
+            <ConfirmModal handleResult={handleConfirmResponse} confirmType={ConfirmTypes.QUESTION} returnValue={1} showModal={showConfirm} defaultPrompt='Are you sure you want to clear this diagram?' title='Clear Diagram' />
+
         </div>
     )
 }
