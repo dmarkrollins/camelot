@@ -3,14 +3,11 @@ import StorageStack from "./storageStack";
 import FrontendStack from "./frontendStack";
 import AuthStack from "./authStack";
 
-
 export default function main(app) {
     // Set default runtime for all functions
     app.setDefaultFunctionProps({
         runtime: 'nodejs14.x'
     });
-
-    const authStack = new AuthStack(app, 'auth')
 
     const storageStack = new StorageStack(app, 'storage')
 
@@ -18,8 +15,12 @@ export default function main(app) {
         table: storageStack.table,
         bucket: storageStack.diagramBucket,
         thumbs: storageStack.thumbsBucket,
-        stage: app.stage,
-        auth: authStack.auth
+        stage: app.stage
+    })
+
+
+    const authStack = new AuthStack(app, 'auth', {
+        api: apiStack.api
     })
 
     new FrontendStack(app, 'frontend', {

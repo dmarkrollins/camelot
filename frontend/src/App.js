@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Route,
-    Routes,
-    Redirect
+    Routes
 } from "react-router-dom"
+import { Auth } from "aws-amplify";
 import Draw from './draw'
 import Diagrams from './diagrams'
 import { CamelotProvider } from './utils/camelotContext'
 import Redirector from './redirector'
+import SignInWrapper from './signInWrapper'
 
 const App = () => {
 
@@ -20,6 +21,21 @@ const App = () => {
     const [currentName, setCurrentName] = useState('')
     const [currentDesc, setCurrentDesc] = useState('')
     const [drawing, setCurrentDrawing] = useState('')
+    const [authenticated, setAuthenticated] = useState(false)
+
+    useEffect(() => {
+        onLoad();
+    }, []);
+
+    async function onLoad() {
+        try {
+            await Auth.currentSession();
+            setAuthenticated(true);
+        }
+        catch (e) {
+            setAuthenticated(false);
+        }
+    }
 
     const CamelotFunctions = {
         hasDrawn: drawn,
@@ -31,6 +47,7 @@ const App = () => {
         diagramName: currentName,
         diagramDesc: currentDesc,
         drawing: drawing,
+        isAuthenticated: authenticated,
         setHasDrawn: (val) => {
             setDrawn(val)
         },
@@ -72,6 +89,9 @@ const App = () => {
             setCurrentName(name)
             setCurrentDesc(desc)
             setCurrentDrawing(drawing)
+        },
+        hasAuthenticated: (val) => {
+            setAuthenticated(val)
         }
 
     }
@@ -79,10 +99,11 @@ const App = () => {
     return (
         <CamelotProvider value={CamelotFunctions}>
             <Routes>
-                <Route path="/" element={<Diagrams />} />
-                <Route path="/view/:id" element={<Draw readonly={true} />} />
+                <Route path="/diagrams" element={<Diagrams />} />
                 <Route path="/draw" element={<Draw />} />
                 <Route path="/draw/:id" element={<Redirector />} />
+                <Route path="/view/:id" element={<Draw readonly={true} />} />
+                <Route path="/" element={<SignInWrapper />} />
             </Routes>
         </CamelotProvider >
     )

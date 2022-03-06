@@ -1,5 +1,4 @@
 import * as sst from "@serverless-stack/resources";
-import * as cognito from "aws-cdk-lib/aws-cognito";
 
 export default class ApiStack extends sst.Stack {
     auth
@@ -7,22 +6,27 @@ export default class ApiStack extends sst.Stack {
     constructor(scope, id, props) {
         super(scope, id, props);
 
+        const { api } = props;
+
         this.auth = new sst.Auth(this, "Auth", {
             cognito: {
                 userPool: {
                     signInAliases: { email: true },
                     selfSignUpEnabled: false,
                     signInCaseSensitive: false,
-                },
-                userPoolClient: {
-                    supportedIdentityProviders: [cognito.UserPoolClientIdentityProvider.COGNITO],
-                    authFlows: { userPassword: true }
                 }
             }
         })
 
+        this.auth.attachPermissionsForAuthUsers([
+            // Allow access to the API
+            api
+        ]);
+
         this.addOutputs({
+            Region: scope.region,
             UserPoolId: this.auth.cognitoUserPool.userPoolId,
+            IdentityPoolId: this.auth.cognitoCfnIdentityPool.ref,
             UserPoolClientId: this.auth.cognitoUserPoolClient.userPoolClientId,
         });
     }

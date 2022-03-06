@@ -12,22 +12,14 @@ import 'foundation-sites'
 import $ from 'jquery'
 import { BrowserRouter } from "react-router-dom"
 
-
-// ReactDOM.render(
-//     <React.StrictMode>
-//         <App />
-//     </React.StrictMode>,
-//     document.getElementById('root')
-// );
-
 Amplify.configure({
-    // Auth: {
-    //     mandatorySignIn: true,
-    //     region: config.cognito.REGION,
-    //     userPoolId: config.cognito.USER_POOL_ID,
-    //     identityPoolId: config.cognito.IDENTITY_POOL_ID,
-    //     userPoolWebClientId: config.cognito.APP_CLIENT_ID
-    // },
+    Auth: {
+        mandatorySignIn: true,
+        region: config.cognito.REGION,
+        userPoolId: config.cognito.USER_POOL_ID,
+        identityPoolId: config.cognito.IDENTITY_POOL_ID,
+        userPoolWebClientId: config.cognito.APP_CLIENT_ID
+    },
     Storage: {
         region: config.s3.REGION,
         bucket: config.s3.BUCKET

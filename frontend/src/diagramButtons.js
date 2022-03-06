@@ -21,7 +21,7 @@ const DiagramButtons = ({ xRef }) => {
     const [showConfirm, setShowConfirm] = useState(false)
 
     const handleReturn = () => {
-        navigate("/");
+        navigate("/diagrams");
     }
 
     const handleClear = () => {
