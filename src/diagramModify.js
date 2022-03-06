@@ -1,7 +1,6 @@
 import handler from "./util/handler";
 import dynamoDb from "./util/dynamoDb";
 import s3 from "./util/s3";
-import { v4 as uuidv4 } from 'uuid';
 import { GetSignedUrlForFile } from "./util/getSignedUrlForFile";
 
 export const main = handler(async (event) => {
