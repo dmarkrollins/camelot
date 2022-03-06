@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-unused-vars */
-import React from 'react'
+import React, { useContext } from 'react'
 import { GiHamburgerMenu } from 'react-icons/gi'
 
 const Navigation = () => {
@@ -20,7 +20,6 @@ const Navigation = () => {
         </div >
 
     )
-
 }
 
 export default Navigation

@@ -14,13 +14,13 @@ const ConfirmModal = ({ handleResult, returnValue, title = 'Please Confirm Choic
     const proceedFunction = () => {
         setTimeout(() => {
             handleResult(returnValue)
-        }, 300)
+        }, 100)
     }
 
     const abortFunction = () => {
         setTimeout(() => {
             handleResult(null)
-        }, 300)
+        }, 100)
     }
 
     const renderIconType = () => {

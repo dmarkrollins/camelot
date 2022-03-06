@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState, useEffect, useCallback, useContext } from 'react'
 // import { IoWaterSharp, IoEyeOutline, IoEyeOffOutline } from 'react-icons/io5'
-import { IoCreateOutline, IoAddCircleOutline, IoChevronDownCircleOutline, IoChevronUpCircleOutline, IoRemoveCircleOutline, IoCogOutline } from 'react-icons/io5'
+import { IoCopyOutline, IoCreateOutline, IoAddCircleOutline, IoChevronDownCircleOutline, IoChevronUpCircleOutline, IoRemoveCircleOutline, IoCogOutline } from 'react-icons/io5'
 
 import { DataManager } from './utils/dataManager'
 import { Oval } from 'react-loader-spinner'
@@ -15,6 +15,8 @@ import ListModal from './diagramModal'
 import ConfirmModal, { ConfirmTypes } from './confirmModal'
 import { Sleep } from './utils/sleep'
 import Camelot from './utils/camelot'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 const DiagramList = () => {
 
@@ -36,6 +38,8 @@ const DiagramList = () => {
     const searchHandler = useCallback(debounce((val) => {
         setSearch(val)
     }, 350, []))
+
+    const notify = () => toast(<span className="camelot-toast-message">Diagram link copied to clipboard!</span>);
 
     const getData = async () => {
         let p = 0
@@ -105,6 +109,15 @@ const DiagramList = () => {
 
     }
 
+    const copyToClipBoard = (e) => {
+
+        const deeplink = `${window.location.href}draw/${e.currentTarget.dataset.id}`
+
+        navigator.clipboard.writeText(deeplink);
+
+        notify()
+    }
+
     const diagramItems = () => {
         if (diagrams === 'undefined' || !diagrams) {
             return []
@@ -139,13 +152,14 @@ const DiagramList = () => {
                         </div>
                         <div className="column small-6">
                             <div className='camelot-button-wrapper-inline'>
+                                <button type="button" data-id={diagrams[i].diagramId} className="camelot-button-active" title="Copy diagram link to clipboard" onClick={copyToClipBoard}><IoCopyOutline /><div className="button-title">Copy</div></button>
                                 <button type="button" data-id={diagrams[i].diagramId} className="camelot-button-active" title="Rename Diagram" onClick={handleRename}><IoCreateOutline /><div className="button-title">Rename</div></button>
                                 <button type="button" data-id={diagrams[i].diagramId} className="camelot-button-active" title="Modify Diagram" onClick={handleModify}><IoCogOutline /><div className="button-title">Modify</div></button>
                                 <button type="button" data-id={diagrams[i].diagramId} className="camelot-button-active" title="Remove Diagram" onClick={handleRemove}><IoRemoveCircleOutline /><div className="button-title">Remove</div></button>
                             </div>
                         </div>
                         <div className="column small-6 text-right" style={{ fontSize: '.7em' }}>
-                            <div style={{ position: 'relative', top: '21px', color: '#ccc' }}>Version {formatVersion(diagrams[i].version)} - {formatDate(diagrams[i].createdAt)}</div>
+                            <div style={{ position: 'relative', top: '21px', color: '#ccc' }}>Version {formatVersion(diagrams[i].version)} - {diagrams[i].modifiedAt ? formatDate(diagrams[i].modifiedAt) : formatDate(diagrams[i].createdAt)}</div>
                         </div>
                     </div>
 
@@ -323,7 +337,18 @@ const DiagramList = () => {
 
                 </div>
                 <ListModal handleSave={handleNameChange} defaultName={diagramName} defaultDesc={diagramDesc} showModal={showModal} closeModal={closeModal} />
-                <ConfirmModal handleResult={handleConfirmResponse} confirmType={ConfirmTypes.ALERT} returnValue={retVal} showModal={showConfirm} defaultPrompt='Are you sure you want to PERMANENTLY delete this digram?' title='Delete Diagram' />
+                <ConfirmModal handleResult={handleConfirmResponse} confirmType={ConfirmTypes.ALERT} returnValue={retVal} showModal={showConfirm} defaultPrompt='Are you sure you want to PERMANENTLY delete this diagram?' title='Delete Diagram' />
+                <ToastContainer
+                    position="top-center"
+                    autoClose={1000}
+                    hideProgressBar={true}
+                    newestOnTop={false}
+                    closeOnClick={false}
+                    rtl={false}
+                    pauseOnFocusLoss={false}
+                    draggable={false}
+                    pauseOnHover={false}
+                />
             </div>
         </>
 

@@ -38,7 +38,8 @@ export default function Draw() {
 
     useEffect(() => {
 
-        const getContent = () => {
+        const getContent = async () => {
+
             let content = null
 
             if (context.drawing) {

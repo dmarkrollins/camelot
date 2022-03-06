@@ -12,14 +12,6 @@ import 'foundation-sites'
 import $ from 'jquery'
 import { BrowserRouter } from "react-router-dom"
 
-
-// ReactDOM.render(
-//     <React.StrictMode>
-//         <App />
-//     </React.StrictMode>,
-//     document.getElementById('root')
-// );
-
 Amplify.configure({
     // Auth: {
     //     mandatorySignIn: true,

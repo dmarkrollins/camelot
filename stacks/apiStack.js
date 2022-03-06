@@ -1,5 +1,4 @@
 import * as sst from "@serverless-stack/resources";
-// import { Certificate } from "aws-cdk-lib/aws-certificatemanager";
 
 export default class ApiStack extends sst.Stack {
     api;
@@ -34,13 +33,6 @@ export default class ApiStack extends sst.Stack {
                 "GET     /diagrams/{id}": "src/diagramItem.main"
             }
         }
-
-        // if (this.stage === 'prod') {
-        //     params.customDomain = {
-        //         domainName: "bbm.6thcents.com",
-        //         certificate: Certificate.fromCertificateArn(this, "bbm-cert", process.env.REACT_APP_CERT_ARN),
-        //     }
-        // }
 
         this.api = new sst.Api(this, "Api", params);
 

@@ -1,7 +1,6 @@
 import handler from "./util/handler";
 import dynamoDb from "./util/dynamoDb";
 import s3 from "./util/s3";
-import { v4 as uuidv4 } from 'uuid';
 import { GetSignedUrlForFile } from "./util/getSignedUrlForFile";
 
 export const main = handler(async (event) => {
@@ -65,6 +64,8 @@ export const main = handler(async (event) => {
     // TODO: need to update the version on the diagram in dynamo
     const newVersion = row.Item.version += 1
 
+    const d = new Date()
+
     try {
         const updParams = {
             TableName: process.env.TABLE_NAME,
@@ -72,9 +73,10 @@ export const main = handler(async (event) => {
                 nameGroup: 'camelot',
                 diagramId: id
             },
-            UpdateExpression: "SET version=:v",
+            UpdateExpression: "SET version=:v, modifiedAt=:d",
             ExpressionAttributeValues: {
-                ":v": newVersion
+                ":v": newVersion,
+                ":d": d.toISOString()
             }
         }
         await dynamoDb.update(updParams)
