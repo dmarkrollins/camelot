@@ -19,7 +19,6 @@ export default class ApiStack extends sst.Stack {
         })
 
         this.auth.attachPermissionsForAuthUsers([
-            // Allow access to the API
             api
         ]);
 

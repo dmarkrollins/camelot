@@ -3,12 +3,12 @@ import {
     Route,
     Routes
 } from "react-router-dom"
+import { Authenticator } from '@aws-amplify/ui-react';
 import { Auth } from "aws-amplify";
 import Draw from './draw'
 import Diagrams from './diagrams'
 import { CamelotProvider } from './utils/camelotContext'
 import Redirector from './redirector'
-import SignInWrapper from './signInWrapper'
 
 const App = () => {
 
@@ -97,15 +97,21 @@ const App = () => {
     }
 
     return (
-        <CamelotProvider value={CamelotFunctions}>
-            <Routes>
-                <Route path="/diagrams" element={<Diagrams />} />
-                <Route path="/draw" element={<Draw />} />
-                <Route path="/draw/:id" element={<Redirector />} />
-                <Route path="/view/:id" element={<Draw readonly={true} />} />
-                <Route path="/" element={<SignInWrapper />} />
-            </Routes>
-        </CamelotProvider >
+        <Authenticator
+            hideSignUp={true}
+            loginMechanisms={['email']}
+        >
+            {({ signOut, user }) => (
+                <CamelotProvider value={CamelotFunctions}>
+                    <Routes>
+                        <Route path="/" element={<Diagrams signOut={signOut} user={user} />} />
+                        <Route path="/draw" element={<Draw />} />
+                        <Route path="/draw/:id" element={<Redirector />} />
+                        <Route path="/view/:id" element={<Draw readonly={true} />} />
+                    </Routes>
+                </CamelotProvider >
+            )}
+        </Authenticator >
     )
 }
 

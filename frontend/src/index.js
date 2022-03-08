@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import 'foundation-sites/dist/css/foundation.min.css'
 import 'animate.css'
 import './index.css';
+import '@aws-amplify/ui-react/styles.css';
 import './App.scss'
 import App from './App';
 import { Amplify } from 'aws-amplify'
@@ -22,8 +23,8 @@ Amplify.configure({
     },
     Storage: {
         region: config.s3.REGION,
-        bucket: config.s3.BUCKET
-        // identityPoolId: config.cognito.IDENTITY_POOL_ID
+        bucket: config.s3.BUCKET,
+        identityPoolId: config.cognito.IDENTITY_POOL_ID
     },
     API: {
         endpoints: [

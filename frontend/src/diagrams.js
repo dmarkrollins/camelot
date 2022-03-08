@@ -4,7 +4,7 @@ import React from 'react';
 import DiagramList from './diagramList'
 import Navigation from './navigation'
 
-const Diagrams = () => {
+const Diagrams = ({ signOut, user }) => {
 
     const backgroundClass = () => {
         // const className = BBM.LocalStorage.get(BBM.Keys.BackgroundClass, 'default-background')
@@ -14,9 +14,9 @@ const Diagrams = () => {
 
     return (
         <div className={backgroundClass()}>
-            <Navigation />
+            <Navigation signOut={signOut} user={user} />
             <div className="row">
-                <div className="twelve columns text-center" style={{ padding: '12px', minWidth: '300px' }}>
+                <div className="twelve columns text-center" style={{ minWidth: '300px' }}>
                     <DiagramList />
                 </div>
             </div>

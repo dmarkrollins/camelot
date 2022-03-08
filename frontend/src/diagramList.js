@@ -141,7 +141,7 @@ const DiagramList = () => {
             const thumbUrl = `https://${diagrams[i].thumbsBucket}.s3.amazonaws.com/${diagrams[i].thumbNail}?t=${timestamp}`
 
             list.push(<tr key={diagrams[i].diagramId}>
-                <td align="camelot-item">
+                <td align="left">
                     <div className="grid-x camelot-item">
                         <div className="cell small-9 text-left">
                             <p style={{ fontWeight: '600' }}>{diagrams[i].diagramName}</p>
@@ -292,25 +292,25 @@ const DiagramList = () => {
 
     return (
         <>
-            <div className="grid-x" >
+            <div className="grid-x" style={{ marginTop: '0px' }}>
+                <div className="cell small-12 medium-10 large-6 text-center" style={{ minHeight: '75vh', margin: '0 auto' }}>
 
-                <div className="cell small-12 medium-10 large-6 text-center" style={{ padding: '7px', minHeight: '75vh', margin: '0 auto' }}>
+                    <div className="cell small-12" style={{ marginTop: '12px', marginBottom: '12px' }}>
+                        <input type="text" placeholder="Search" onChange={doSearch} style={{ height: '34px', margin: '0 auto' }} />
+                    </div>
 
-                    <div className="cell small-12" style={{ width: '100%', marginTop: '30px', zIndex: '1' }}>
-                        <button type="button" className="float-left" style={{ position: 'relative', display: 'inline', top: '-27px' }} onClick={newDrawing}>
+                    <div className="cell small-12" style={{ width: '100%', marginTop: '21px', zIndex: '1' }}>
+                        <button type="button" className="float-left" style={{ position: 'relative', display: 'inline', top: '0px' }} onClick={newDrawing}>
                             <span aria-hidden="true" style={{ fontSize: '1.5em', color: '#A55640' }}><IoAddCircleOutline /></span>
                         </button>
-                        <button id="btnNext" className="float-right" aria-label="Prev" type="button" disabled={nextDisabled()} onClick={nextPage} style={{ position: 'relative', display: 'inline', top: '-27px' }}>
+                        <button id="btnNext" className="float-right" aria-label="Prev" type="button" disabled={nextDisabled()} onClick={nextPage} style={{ position: 'relative', display: 'inline', top: '0px' }}>
                             <span aria-hidden="true"><IoChevronDownCircleOutline style={nextStyle()} /></span>
                         </button>
-                        <button id="btnPrev" className="float-right" aria-label="Next" type="button" disabled={previousDisabled()} onClick={prevPage} style={{ position: 'relative', display: 'inline', top: '-27px', marginRight: '27px' }}>
+                        <button id="btnPrev" className="float-right" aria-label="Next" type="button" disabled={previousDisabled()} onClick={prevPage} style={{ position: 'relative', display: 'inline', top: '0px', marginRight: '27px' }}>
                             <span aria-hidden="true"><IoChevronUpCircleOutline style={prevStyle()} /></span>
                         </button>
                     </div>
 
-                    <div className="cell small-12" style={{ marginBottom: '12px' }}>
-                        <input type="text" placeholder="Search" onChange={doSearch} style={{ margin: '0 auto' }} />
-                    </div>
 
                     {loading ? <Oval
                         ariaLabel="loading-indicator"
