@@ -4,4 +4,6 @@ Diagram repository
 
 ### To Do
 
-- cognito
+- export diagram
+- import diagram
+- link one diagram to another will drill thru

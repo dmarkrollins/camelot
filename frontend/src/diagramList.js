@@ -225,7 +225,6 @@ const DiagramList = () => {
         const id = e.currentTarget.dataset.id
         setLoading(true)
         try {
-            context.clearDiagram()
             const response = await DataManager.getDrawing({ id })
             context.setDiagram({ id: response.diagramId, name: response.diagramName, desc: response.diagramDesc, drawing: response.drawing })
             navigate('/draw')
@@ -242,7 +241,6 @@ const DiagramList = () => {
         const id = e.currentTarget.dataset.id
         try {
             setLoading(true)
-            context.clearDiagram()
             const response = await DataManager.getDrawing({ id })
             // console.log(response)
             setDiagramName(response.diagramName)
@@ -273,7 +271,7 @@ const DiagramList = () => {
                 setDiagrams(list)
             }
 
-            context.clearDiagram()
+            // context.clearDiagram()
 
             setShowModal(false)
         }
@@ -323,11 +321,6 @@ const DiagramList = () => {
                     /> : ''}
                     <>
                         <table className="movement-table hover unstriped" style={{ border: '1px solid #ccc', borderRadius: '8px' }}>
-                            {/* <thead>
-                                <tr style={{ fontSize: '.8em' }}>
-                                <th>Drawing</th>
-                                </tr>
-                            </thead> */}
                             <tbody>
                                 {diagramItems(diagrams)}
                             </tbody>

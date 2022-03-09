@@ -13,7 +13,7 @@ export const GetSignedUrlForFile = async ({ bucket, fileName, operation = 'put' 
         ContentType: 'image/jpeg'
     }
 
-    console.log('url params', objectParams)
+    // console.log('url params', objectParams)
 
     const s3Client = new S3Client(config);
     const command = operation === 'get' ? new GetObjectCommand(objectParams) : new PutObjectCommand(objectParams);
