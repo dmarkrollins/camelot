@@ -19,7 +19,7 @@ const Redirector = () => {
                 navigate('/draw')
             }
             else {
-                navigate('/diagrams')
+                navigate('/')
             }
         }
         doNavigation()

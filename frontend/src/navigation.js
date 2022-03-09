@@ -33,7 +33,6 @@ const Navigation = ({ signOut, user }) => {
         </div >
 
     )
-
 }
 
 export default Navigation
