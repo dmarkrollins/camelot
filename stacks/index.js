@@ -1,6 +1,7 @@
 import ApiStack from "./apiStack";
 import StorageStack from "./storageStack";
 import FrontendStack from "./frontendStack";
+import AuthStack from "./authStack";
 
 export default function main(app) {
     // Set default runtime for all functions
@@ -17,9 +18,15 @@ export default function main(app) {
         stage: app.stage
     })
 
+
+    const authStack = new AuthStack(app, 'auth', {
+        api: apiStack.api
+    })
+
     new FrontendStack(app, 'frontend', {
         api: apiStack.api,
         bucket: storageStack.siteBucket,
-        thumbs: storageStack.thumbsBucket
+        thumbs: storageStack.thumbsBucket,
+        auth: authStack.auth
     })
 }

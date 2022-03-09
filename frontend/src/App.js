@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Route,
     Routes
 } from "react-router-dom"
+import { Authenticator } from '@aws-amplify/ui-react';
+import { Auth } from "aws-amplify";
 import Draw from './draw'
 import Diagrams from './diagrams'
 import { CamelotProvider } from './utils/camelotContext'
@@ -19,6 +21,21 @@ const App = () => {
     const [currentName, setCurrentName] = useState('')
     const [currentDesc, setCurrentDesc] = useState('')
     const [drawing, setCurrentDrawing] = useState('')
+    const [authenticated, setAuthenticated] = useState(false)
+
+    useEffect(() => {
+        onLoad();
+    }, []);
+
+    async function onLoad() {
+        try {
+            await Auth.currentSession();
+            setAuthenticated(true);
+        }
+        catch (e) {
+            setAuthenticated(false);
+        }
+    }
 
     const CamelotFunctions = {
         hasDrawn: drawn,
@@ -30,6 +47,7 @@ const App = () => {
         diagramName: currentName,
         diagramDesc: currentDesc,
         drawing: drawing,
+        isAuthenticated: authenticated,
         setHasDrawn: (val) => {
             setDrawn(val)
         },
@@ -71,19 +89,29 @@ const App = () => {
             setCurrentName(name)
             setCurrentDesc(desc)
             setCurrentDrawing(drawing)
+        },
+        hasAuthenticated: (val) => {
+            setAuthenticated(val)
         }
 
     }
 
     return (
-        <CamelotProvider value={CamelotFunctions}>
-            <Routes>
-                <Route path="/" element={<Diagrams />} />
-                <Route path="/draw" element={<Draw />} />
-                <Route path="/draw/:id" element={<Redirector />} />
-                <Route path="/view/:id" element={<Draw readonly={true} />} />
-            </Routes>
-        </CamelotProvider >
+        <Authenticator
+            hideSignUp={true}
+            loginMechanisms={['email']}
+        >
+            {({ signOut, user }) => (
+                <CamelotProvider value={CamelotFunctions}>
+                    <Routes>
+                        <Route path="/" element={<Diagrams signOut={signOut} user={user} />} />
+                        <Route path="/draw" element={<Draw />} />
+                        <Route path="/draw/:id" element={<Redirector />} />
+                        <Route path="/view/:id" element={<Draw readonly={true} />} />
+                    </Routes>
+                </CamelotProvider >
+            )}
+        </Authenticator >
     )
 }
 

@@ -220,6 +220,7 @@
   }
 
   .camelot-item {
+      padding-bottom: 7px;
       border-bottom: 1px solid #ccc;
   }
 
@@ -247,8 +248,8 @@
     font-size: 7pt;
     // display: block;
     // margin: 0 auto;
-    // position: relative;
-    // top: -2px;
+    position: relative;
+    top: -7px;
     // text-align: center;
 }
 
@@ -321,4 +322,14 @@ div.save-button button {
 
   .camelot-toast-message {
     color: #A55640; 
+  }
+
+  div [data-amplify-container] {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
+    -o-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
   }

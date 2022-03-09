@@ -9,7 +9,7 @@ export default class ApiStack extends sst.Stack {
         const { bucket, table, stage, thumbs } = props;
 
         const params = {
-            // defaultAuthorizationType: "AWS_IAM",
+            defaultAuthorizationType: "AWS_IAM",
             defaultThrottlingRateLimit: 5,
             defaultThrottlingBurstLimit: 5,
             defaultFunctionProps: {

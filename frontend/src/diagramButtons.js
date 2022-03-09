@@ -60,7 +60,7 @@ const DiagramButtons = ({ xRef }) => {
 
         try {
             await DataManager.modifyDrawing({ diagramId, drawing, image: blob })
-            context.setDiagramDrawing(drawing)
+            context.setDiagramDrawing(JSON.stringify(drawing))
         }
         catch (err) {
             console.log(err)
