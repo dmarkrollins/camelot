@@ -13,7 +13,7 @@ import ConfirmModal, { ConfirmTypes } from './confirmModal'
 // import { v4 as uuidv4 } from 'uuid';
 // import ResizeBlob from './utils/resizeBlob'
 
-const DiagramButtons = ({ xRef }) => {
+const DiagramButtons = ({ xRef, handleSpinner }) => {
     const navigate = useNavigate()
     const context = useContext(CamContext)
 
@@ -56,17 +56,17 @@ const DiagramButtons = ({ xRef }) => {
             files: xRef.current.getFiles()
         }
 
-        context.setIsSaving(true)
+        handleSpinner(true)
 
         try {
             await DataManager.modifyDrawing({ diagramId, drawing, image: blob })
-            context.setDiagramDrawing(JSON.stringify(drawing))
+            context.setDiagramDrawing(drawing)
         }
         catch (err) {
             console.log(err)
         }
         finally {
-            context.setIsSaving(false)
+            handleSpinner(false)
         }
     }
 
@@ -96,7 +96,7 @@ const DiagramButtons = ({ xRef }) => {
             files: xRef.current.getFiles()
         }
 
-        context.setIsSaving(true)
+        handleSpinner(true)
 
         try {
             const response = await DataManager.saveDrawing({ diagramName, diagramDesc, drawing, image: blob })
@@ -106,7 +106,7 @@ const DiagramButtons = ({ xRef }) => {
             console.log(err)
         }
         finally {
-            context.setIsSaving(false)
+            handleSpinner(false)
         }
     }
 

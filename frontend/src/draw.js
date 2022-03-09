@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useCallback, useContext, useMemo } from "react";
+import React, { useEffect, useState, useRef, useCallback, useContext, useMemo } from "react";
 import Excalidraw from "@excalidraw/excalidraw";
 import { Oval } from 'react-loader-spinner'
 import "./App.scss";
@@ -20,6 +20,7 @@ const resolvablePromise = () => {
 
 export default function Draw() {
     const context = useContext(CamContext)
+    const [isSpinning, setIsSpinning] = useState(false)
 
     const initialStatePromiseRef = useRef({ promise: null });
 
@@ -36,6 +37,10 @@ export default function Draw() {
         []
     );
 
+    const isObject = (val) => {
+        return val instanceof Object;
+    }
+
     useEffect(() => {
 
         const getContent = async () => {
@@ -44,7 +49,13 @@ export default function Draw() {
 
             if (context.drawing) {
                 // existing diagram
-                content = JSON.parse(context.drawing)
+
+                if (isObject(context.drawing)) {
+                    content = context.drawing
+                }
+                else {
+                    content = JSON.parse(context.drawing)
+                }
                 content.appState = { viewBackgroundColor: "#FFFFFF", currentItemFontFamily: 1 }
             }
             else {
@@ -119,10 +130,14 @@ export default function Draw() {
         Camelot.LocalStorage.set({ key: Camelot.Keys.LIBRARIES, value: items, isJson: true })
     }
 
+    const spinHandler = (val) => {
+        setIsSpinning(val)
+    }
+
     return (
         <div className="App">
-            <DiagramButtons xRef={excalidrawRef} />
-            {context.isSaving ? <Oval
+            <DiagramButtons xRef={excalidrawRef} handleSpinner={spinHandler} />
+            {isSpinning ? <Oval
                 ariaLabel="loading-indicator"
                 height={100}
                 width={100}

@@ -30,6 +30,7 @@ const DiagramList = () => {
     const [loading, setLoading] = useState(true)
     const [search, setSearch] = useState('')
     const [showModal, setShowModal] = useState(false)
+    const [diagramId, setDiagramId] = useState('')
     const [diagramName, setDiagramName] = useState('')
     const [diagramDesc, setDiagramDesc] = useState('')
     const [showConfirm, setShowConfirm] = useState(false)
@@ -245,7 +246,8 @@ const DiagramList = () => {
             // console.log(response)
             setDiagramName(response.diagramName)
             setDiagramDesc(response.diagramDesc)
-            context.setDiagram({ id: response.diagramId, name: response.diagramName, desc: response.diagramDesc, drawing: response.drawing })
+            setDiagramId(id)
+            // context.setDiagram({ id: response.diagramId, name: response.diagramName, desc: response.diagramDesc, drawing: response.drawing })
             Sleep(200)
             setShowModal(true)
         }
@@ -260,11 +262,11 @@ const DiagramList = () => {
 
         try {
             setLoading(true)
-            await DataManager.renameDrawing({ diagramId: context.diagramId, diagramName, diagramDesc })
+            await DataManager.renameDrawing({ diagramId: diagramId, diagramName, diagramDesc })
 
             const list = [...diagrams];
 
-            const foundIndex = list.findIndex(x => x.diagramId === context.diagramId);
+            const foundIndex = list.findIndex(x => x.diagramId === diagramId);
             if (foundIndex !== -1) {
                 list[foundIndex].diagramName = diagramName
                 list[foundIndex].description = diagramDesc
