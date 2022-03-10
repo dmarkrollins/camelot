@@ -10,6 +10,7 @@ import Camelot from './utils/camelot'
 import { DataManager } from './utils/dataManager'
 import DiagramModal from './diagramModal'
 import ConfirmModal, { ConfirmTypes } from './confirmModal'
+// const reduce = require('image-blob-reduce')();
 // import { v4 as uuidv4 } from 'uuid';
 // import ResizeBlob from './utils/resizeBlob'
 
@@ -45,7 +46,7 @@ const DiagramButtons = ({ xRef, handleSpinner }) => {
             appState: xRef.current.getAppState(),
             files: xRef.current.getFiles(),
             mimeType: 'image/jpeg',
-            quality: .5
+            quality: .33
         };
 
         const blob = await exportToBlob(opts)
@@ -100,6 +101,7 @@ const DiagramButtons = ({ xRef, handleSpinner }) => {
 
         try {
             const response = await DataManager.saveDrawing({ diagramName, diagramDesc, drawing, image: blob })
+            drawing.scrollToContent = false
             context.setDiagram({ id: response.diagramId, name: diagramName, desc: diagramDesc, drawing })
         }
         catch (err) {

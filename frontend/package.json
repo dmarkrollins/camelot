@@ -12,6 +12,7 @@
         "aws-amplify": "^4.3.14",
         "axios": "^0.21.4",
         "foundation-sites": "^6.7.4",
+        "image-blob-reduce": "^4.1.0",
         "jquery": "^3.6.0",
         "moment": "^2.29.1",
         "node-sass": "^7.0.1",

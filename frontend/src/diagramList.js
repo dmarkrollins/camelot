@@ -138,8 +138,9 @@ const DiagramList = () => {
             }
 
             const timestamp = new Date().getTime();
+            const twoMinutesAgo = moment().subtract(2, 'minutes')
 
-            const thumbUrl = `https://${diagrams[i].thumbsBucket}.s3.amazonaws.com/${diagrams[i].thumbNail}?t=${timestamp}`
+            const thumbUrl = moment(diagrams[i].modifiedAt).isAfter(twoMinutesAgo) ? `https://${diagrams[i].thumbsBucket}.s3.amazonaws.com/${diagrams[i].thumbNail}?t=${timestamp}` : `https://${diagrams[i].thumbsBucket}.s3.amazonaws.com/${diagrams[i].thumbNail}`
 
             list.push(<tr key={diagrams[i].diagramId}>
                 <td align="left">

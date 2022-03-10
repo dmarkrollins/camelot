@@ -8,7 +8,7 @@ export const main = handler(async (event) => {
     let searchVal = ''
 
     if (querystring && querystring.search) {
-        searchVal = querystring.search
+        searchVal = querystring.search.toLowerCase()
     }
 
     // console.log('Search Val', searchVal)
@@ -21,9 +21,9 @@ export const main = handler(async (event) => {
     if (searchVal > '') {
         params.IndexName = 'nameIndex'
         params.ConsistentRead = false
-        params.KeyConditionExpression = "nameGroup = :group"
-        params.FilterExpression = "contains(diagramName, :search)"
-        // params.KeyConditionExpression = "nameGroup = :group and begins_with(searchName, :search)"
+        // params.KeyConditionExpression = "nameGroup = :group"
+        // params.FilterExpression = "contains(diagramName, :search)"
+        params.KeyConditionExpression = "nameGroup = :group and begins_with(searchName, :search)"
         params.ExpressionAttributeValues = {
             ":search": searchVal,
             ":group": 'camelot'
