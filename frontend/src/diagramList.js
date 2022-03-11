@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState, useEffect, useCallback, useContext } from 'react'
 // import { IoWaterSharp, IoEyeOutline, IoEyeOffOutline } from 'react-icons/io5'
-import { IoCopyOutline, IoCreateOutline, IoAddCircleOutline, IoChevronDownCircleOutline, IoChevronUpCircleOutline, IoRemoveCircleOutline, IoCogOutline } from 'react-icons/io5'
+import { IoCopyOutline, IoCreateOutline, IoAddCircleOutline, IoChevronBackCircleOutline, IoChevronForwardCircleOutline, IoRemoveCircleOutline, IoCogOutline } from 'react-icons/io5'
 
 import { DataManager } from './utils/dataManager'
 import { Oval } from 'react-loader-spinner'
@@ -119,6 +119,13 @@ const DiagramList = () => {
         notify()
     }
 
+    const borderClass = (i, end) => {
+        if (i + 1 === end) {
+            return 'grid-x camelot-item-no-border'
+        }
+        return 'grid-x camelot-item'
+    }
+
     const diagramItems = () => {
         if (diagrams === 'undefined' || !diagrams) {
             return []
@@ -144,7 +151,7 @@ const DiagramList = () => {
 
             list.push(<tr key={diagrams[i].diagramId}>
                 <td align="left">
-                    <div className="grid-x camelot-item">
+                    <div className={borderClass(i, end)}>
                         <div className="cell small-9 text-left">
                             <p style={{ fontWeight: '600' }}>{diagrams[i].diagramName}</p>
                             <p>{diagrams[i].description}</p>
@@ -207,7 +214,9 @@ const DiagramList = () => {
 
     const newDrawing = () => {
         context.clearDiagram()
-        navigate('/draw')
+        setTimeout(() => {
+            navigate('/draw')
+        }, 200)
     }
 
     const handleConfirmResponse = (val) => {
@@ -293,59 +302,63 @@ const DiagramList = () => {
 
     return (
         <>
-            <div className="grid-x" style={{ marginTop: '0px' }}>
-                <div className="cell small-12 medium-10 large-6 text-center" style={{ minHeight: '75vh', margin: '0 auto' }}>
+            <div className="grid-x">
+                <div className="cell small-10 medium-10 large-6 text-center" style={{ minHeight: '75vh', margin: '0 auto' }}>
 
-                    <div className="cell small-12" style={{ marginTop: '12px', marginBottom: '12px' }}>
-                        <input type="text" placeholder="Search" onChange={doSearch} style={{ height: '34px', margin: '0 auto' }} />
-                    </div>
+                    <div style={{ marginTop: '21px' }} className="save-button">
+                        <input type="text" className="float-left" placeholder="Search" onChange={doSearch} style={{ height: '34px', width: '50%' }} />
 
-                    <div className="cell small-12" style={{ width: '100%', marginTop: '21px', zIndex: '1' }}>
-                        <button type="button" className="float-left" style={{ position: 'relative', display: 'inline', top: '0px' }} onClick={newDrawing}>
-                            <span aria-hidden="true" style={{ fontSize: '1.5em', color: '#A55640' }}><IoAddCircleOutline /></span>
-                        </button>
-                        <button id="btnNext" className="float-right" aria-label="Prev" type="button" disabled={nextDisabled()} onClick={nextPage} style={{ position: 'relative', display: 'inline', top: '0px' }}>
-                            <span aria-hidden="true"><IoChevronDownCircleOutline style={nextStyle()} /></span>
-                        </button>
-                        <button id="btnPrev" className="float-right" aria-label="Next" type="button" disabled={previousDisabled()} onClick={prevPage} style={{ position: 'relative', display: 'inline', top: '0px', marginRight: '27px' }}>
-                            <span aria-hidden="true"><IoChevronUpCircleOutline style={prevStyle()} /></span>
+
+                        <button type="button" title='New Diagram' className="float-right" style={{ height: '34px' }} onClick={newDrawing}>
+                            New <div style={{ display: 'inline-block', position: 'relative', top: '3px' }}><IoAddCircleOutline /></div>
                         </button>
                     </div>
 
-
-                    {loading ? <Oval
-                        ariaLabel="loading-indicator"
-                        height={100}
-                        width={100}
-                        strokeWidth={5}
-                        color="#A55640"
-                        secondaryColor="#efefef"
-                        wrapperClass="spinner"
-                    /> : ''}
                     <>
+                        {loading ? <Oval
+                            ariaLabel="loading-indicator"
+                            height={100}
+                            width={100}
+                            strokeWidth={5}
+                            color="#A55640"
+                            secondaryColor="#efefef"
+                            wrapperClass="spinner"
+                        /> : ''}
                         <table className="movement-table hover unstriped" style={{ border: '1px solid #ccc', borderRadius: '8px' }}>
                             <tbody>
                                 {diagramItems(diagrams)}
                             </tbody>
                         </table>
-                        <div>Page {page + 1} of {pages + 1} </div>
+                        <div>
+                            <button id="btnPrev" title='Previous Page' aria-label="Next" type="button" disabled={previousDisabled()} onClick={prevPage} style={{ position: 'relative', display: 'inline', top: '7px', marginRight: '12px' }}>
+                                <span aria-hidden="true"><IoChevronBackCircleOutline style={prevStyle()} /></span>
+                            </button>
+                            <span>Page {page + 1} of {pages + 1} </span>
+                            <button id="btnNext" title='Next Page' aria-label="Prev" type="button" disabled={nextDisabled()} onClick={nextPage} style={{ position: 'relative', display: 'inline', top: '7px', marginLeft: '12px' }}>
+                                <span aria-hidden="true"><IoChevronForwardCircleOutline style={nextStyle()} /></span>
+                            </button>
+                        </div>
+
                     </>
 
                 </div>
-                <ListModal handleSave={handleNameChange} defaultName={diagramName} defaultDesc={diagramDesc} showModal={showModal} closeModal={closeModal} />
-                <ConfirmModal handleResult={handleConfirmResponse} confirmType={ConfirmTypes.ALERT} returnValue={retVal} showModal={showConfirm} defaultPrompt='Are you sure you want to PERMANENTLY delete this diagram?' title='Delete Diagram' />
-                <ToastContainer
-                    position="top-center"
-                    autoClose={1000}
-                    hideProgressBar={true}
-                    newestOnTop={false}
-                    closeOnClick={false}
-                    rtl={false}
-                    pauseOnFocusLoss={false}
-                    draggable={false}
-                    pauseOnHover={false}
-                />
             </div>
+
+            <ListModal handleSave={handleNameChange} defaultName={diagramName} defaultDesc={diagramDesc} showModal={showModal} closeModal={closeModal} />
+            <ConfirmModal handleResult={handleConfirmResponse} confirmType={ConfirmTypes.ALERT} returnValue={retVal} showModal={showConfirm} defaultPrompt='Are you sure you want to PERMANENTLY delete this diagram?' title='Delete Diagram' />
+            <ToastContainer
+                position="top-center"
+                autoClose={1000}
+                hideProgressBar={true}
+                newestOnTop={false}
+                closeOnClick={false}
+                rtl={false}
+                pauseOnFocusLoss={false}
+                draggable={false}
+                pauseOnHover={false}
+            />
+
+
         </>
 
     )

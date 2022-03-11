@@ -18,7 +18,7 @@ const Navigation = ({ signOut, user }) => {
     return (
 
         <div className="grid-x" style={{ marginTop: '12px' }}>
-            <div className="cell small-12 medium-10 large-6" style={{ margin: '0 auto', height: '45px', borderBottom: '1px solid #999' }}>
+            <div className="cell small-10 medium-10 large-6" style={{ margin: '0 auto', height: '45px', borderBottom: '1px solid #999' }}>
 
                 <div style={{ padding: '7px', float: 'left' }}>
                     <img src="/logo.png" width="150" alt="" />
