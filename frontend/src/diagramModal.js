@@ -12,7 +12,6 @@ const DiagramModal = ({ handleSave, defaultName = '', defaultDesc = '', showModa
         setName(defaultName)
         setDesc(defaultDesc)
         setErrMessage('')
-        // console.log('Modal use effect')
     }, [defaultName, defaultDesc])
 
     const nameChange = (event) => {

@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef, useCallback, useContext, useMemo } from "react";
 import Excalidraw from "@excalidraw/excalidraw";
 import { Oval } from 'react-loader-spinner'
+import { debounce } from "lodash";
 import "./App.scss";
 import DiagramButtons from './diagramButtons'
 import CamContext from './utils/camelotContext'
@@ -59,16 +60,31 @@ export default function Draw() {
                 content.appState = { viewBackgroundColor: "#FFFFFF", currentItemFontFamily: 1 }
             }
             else {
-                // new diagram
-                content = {
-                    elements: [],
-                    appState: { viewBackgroundColor: "#FFFFFF", currentItemFontFamily: 1 }
+
+                const savedContent = Camelot.LocalStorage.get({ key: Camelot.Constants.DIAGRAM, defaultValue: null, isJson: true })
+
+                if (!savedContent) {
+                    content = {
+                        elements: [],
+                        appState: { viewBackgroundColor: "#FFFFFF", currentItemFontFamily: 1 }
+                    }
                 }
+                else {
+                    content = {
+                        elements: savedContent.elements,
+                        appState: { viewBackgroundColor: "#FFFFFF", currentItemFontFamily: 1 }
+                    }
+
+                    if (savedContent.files) {
+                        content.files = savedContent.files
+                    }
+                }
+
             }
 
             content.scrollToContent = true
 
-            const libraries = Camelot.LocalStorage.get({ key: Camelot.Keys.LIBRARIES, defaultValue: null, isJson: true })
+            const libraries = Camelot.LocalStorage.get({ key: Camelot.Constants.LIBRARIES, defaultValue: null, isJson: true })
 
             if (libraries) {
                 content.libraryItems = libraries
@@ -127,12 +143,27 @@ export default function Draw() {
     }, []);
 
     const handleLibraryChange = (items) => {
-        Camelot.LocalStorage.set({ key: Camelot.Keys.LIBRARIES, value: items, isJson: true })
+        Camelot.LocalStorage.set({ key: Camelot.Constants.LIBRARIES, value: items, isJson: true })
     }
 
     const spinHandler = (val) => {
         setIsSpinning(val)
     }
+
+    const debounceChange = debounce((elements, appState, files) => {
+        if (!context.diagramId) {
+            // save to local storage
+            const diagram = {
+                elements, appState, files,
+            }
+            Camelot.LocalStorage.set({ key: Camelot.Constants.DIAGRAM, value: diagram, isJson: true })
+        }
+        console.log('hi')
+    }, Camelot.Constants.CHANGE_TIMEOUT)
+
+    const onChange = useCallback((elements, appState, files) => {
+        debounceChange(elements, appState, files)
+    }, [debounceChange])
 
     return (
         <div className="App">
@@ -150,7 +181,7 @@ export default function Draw() {
                 <Excalidraw
                     ref={excalidrawRef}
                     initialData={initialStatePromiseRef.current.promise}
-                    // onChange={handleChange}
+                    onChange={onChange}
                     libraryReturnUrl={window.location.href}
                     onLibraryChange={handleLibraryChange}
                     viewModeEnabled={context.isReadOnly}

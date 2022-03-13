@@ -102,6 +102,7 @@ const DiagramButtons = ({ xRef, handleSpinner }) => {
         try {
             const response = await DataManager.saveDrawing({ diagramName, diagramDesc, drawing, image: blob })
             drawing.scrollToContent = false
+            Camelot.LocalStorage.set({ key: Camelot.Constants.DIAGRAM, value: null }) // clear "new" diagram
             context.setDiagram({ id: response.diagramId, name: diagramName, desc: diagramDesc, drawing })
         }
         catch (err) {
