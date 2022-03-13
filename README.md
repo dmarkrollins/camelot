@@ -20,18 +20,18 @@ I built this with the excellent [Serverless Stack SST](https://serverless-stack.
 
 ### List
 
-<img src="/images/camelot.jpg" alt="" width="300" />
+<img src="/images/Camelot.jpg" alt="" width="300" />
 
 ### Draw
 
-<img src="/images/draw.jpg" alt="" width="300" />
+<img src="/images/Draw.jpg" alt="" width="300" />
 
 ### Rename
-<img src="/images/rename.jpg" alt="" width="300" />
+<img src="/images/Rename.jpg" alt="" width="300" />
 
 ### Remove
 
-<img src="/images/remove.jpg" alt="" width="300" />
+<img src="/images/Remove.jpg" alt="" width="300" />
 
 ### Current Roadmap
 - link one diagram to another 
