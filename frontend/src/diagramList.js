@@ -8,6 +8,7 @@ import { IoCopyOutline, IoCreateOutline, IoAddCircleOutline, IoChevronBackCircle
 import { DataManager } from './utils/dataManager'
 import { Oval } from 'react-loader-spinner'
 import { debounce } from "lodash";
+import { ToastContainer, toast } from 'react-toastify'
 import moment from 'moment'
 import { useNavigate } from "react-router-dom";
 import CamContext from './utils/camelotContext'
@@ -15,7 +16,7 @@ import ListModal from './diagramModal'
 import ConfirmModal, { ConfirmTypes } from './confirmModal'
 import { Sleep } from './utils/sleep'
 import Camelot from './utils/camelot'
-import { ToastContainer, toast } from 'react-toastify'
+
 import 'react-toastify/dist/ReactToastify.css'
 
 const DiagramList = () => {
@@ -38,7 +39,7 @@ const DiagramList = () => {
 
     const searchHandler = useCallback(debounce((val) => {
         setSearch(val)
-    }, 350, []))
+    }, Camelot.Constants.SEARCH_TIMEOUT, []))
 
     const notify = () => toast(<span className="camelot-toast-message">Diagram link copied to clipboard!</span>);
 

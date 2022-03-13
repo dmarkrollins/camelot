@@ -17,7 +17,7 @@ const App = () => {
     const [saving, setSaving] = useState(false)
     const [readonly, setReadonly] = useState(false)
     const [modalvisible, setModalVisible] = useState(false)
-    const [currentId, setCurrentId] = useState('')
+    const [currentId, setCurrentId] = useState(null)
     const [currentName, setCurrentName] = useState('')
     const [currentDesc, setCurrentDesc] = useState('')
     const [drawing, setCurrentDrawing] = useState('')

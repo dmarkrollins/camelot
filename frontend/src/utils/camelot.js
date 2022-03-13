@@ -1,8 +1,10 @@
 const Camelot = {}
 
-Camelot.Keys = {
+Camelot.Constants = {
     DIAGRAM: 'diagram',
-    LIBRARIES: 'libraries'
+    LIBRARIES: 'libraries',
+    CHANGE_TIMEOUT: 300,
+    SEARCH_TIMEOUT: 350
 }
 
 Camelot.LocalStorage = {
