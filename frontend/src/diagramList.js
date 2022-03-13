@@ -120,8 +120,12 @@ const DiagramList = () => {
         notify()
     }
 
-    const borderClass = (i, end) => {
+    const borderClass = (i, end, length) => {
         if (i + 1 === end) {
+            return 'grid-x camelot-item-no-border'
+        }
+
+        if (i + 1 === length) {
             return 'grid-x camelot-item-no-border'
         }
         return 'grid-x camelot-item'
@@ -152,7 +156,7 @@ const DiagramList = () => {
 
             list.push(<tr key={diagrams[i].diagramId}>
                 <td align="left">
-                    <div className={borderClass(i, end)}>
+                    <div className={borderClass(i, end, diagrams.length)}>
                         <div className="cell small-9 text-left">
                             <p style={{ fontWeight: '600' }}>{diagrams[i].diagramName}</p>
                             <p>{diagrams[i].description}</p>
