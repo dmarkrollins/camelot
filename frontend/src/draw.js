@@ -6,6 +6,7 @@ import "./App.scss";
 import DiagramButtons from './diagramButtons'
 import CamContext from './utils/camelotContext'
 import Camelot from './utils/camelot'
+import ChooseModal from './chooseModal'
 
 const resolvablePromise = () => {
     let resolve;
@@ -19,9 +20,14 @@ const resolvablePromise = () => {
     return promise;
 };
 
+let mouseDown = null
+let selectedElement = null
+
 export default function Draw() {
     const context = useContext(CamContext)
     const [isSpinning, setIsSpinning] = useState(false)
+    const [showModal, setShowModal] = useState(false)
+    const [widget, setWidget] = useState(null)
 
     const initialStatePromiseRef = useRef({ promise: null });
 
@@ -96,23 +102,8 @@ export default function Draw() {
 
         excalidrawRef.current.readyPromise.then((api) => {
             initialStatePromiseRef.current.promise.resolve(getContent());
-            // api.updateScene(getContent())
         });
-        // }, [excalidrawRef, context.drawing]);
 
-        // useEffect(() => {
-
-        //     setTimeout(() => {
-        //         let content = null
-
-        //         if (context.drawing) {
-        //             content = JSON.parse(context.drawing)
-        //             content.scrollToContent = true
-        //             content.appState = { viewBackgroundColor: "#FFFFFF", currentItemFontFamily: 1 }
-        //         }
-
-        //         initialStatePromiseRef.current.promise.resolve(content);
-        //     }, 250);
 
         const onHashChange = () => {
             const hash = new URLSearchParams(window.location.hash.slice(1));
@@ -132,14 +123,23 @@ export default function Draw() {
         const { nativeEvent } = event.detail;
         const isNewTab = nativeEvent.ctrlKey || nativeEvent.metaKey;
         const isNewWindow = nativeEvent.shiftKey;
+        if (link.startsWith('camelot:')) {
+            const parts = link.split('camelot:')
+            window.location.href = `/draw/${parts[1]}`
+            return
+        }
+
         const isInternalLink =
             link.startsWith("/") || link.includes(window.location.origin);
+
         if (isInternalLink && !isNewTab && !isNewWindow) {
             // signal that we're handling the redirect ourselves
             event.preventDefault();
             // do a custom redirect, such as passing to react-router
             // ...
         }
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const handleLibraryChange = (items) => {
@@ -150,6 +150,34 @@ export default function Draw() {
         setIsSpinning(val)
     }
 
+    const handleMouse = (event) => {
+
+        if (event.button === 'down') {
+            mouseDown = new Date()
+            selectedElement = null
+            console.log(event)
+            return
+        }
+
+        if (event.button === 'up' && !selectedElement) {
+            mouseDown = null
+            return
+        }
+
+        if (event.button === 'up' && mouseDown) {
+            mouseDown = null
+            selectedElement = null
+            return
+        }
+
+        if (event.button === 'up' && selectedElement) {
+            setWidget(selectedElement)
+            setShowModal(true)
+            // alert(`The selected element ${selectedElement}`)
+            selectedElement = null
+        }
+    }
+
     const debounceChange = debounce((elements, appState, files) => {
         if (!context.diagramId) {
             // save to local storage
@@ -158,12 +186,53 @@ export default function Draw() {
             }
             Camelot.LocalStorage.set({ key: Camelot.Constants.DIAGRAM, value: diagram, isJson: true })
         }
-        console.log('hi')
+
+        console.log('Change', mouseDown, appState.selectedElementIds)
+
+        if (mouseDown) {
+            const keys = Object.keys(appState.selectedElementIds)
+            // console.log('Keys', keys)
+            const element = elements.filter((item) => item.id === keys[0])[0]
+            if (element !== 'undefined') {
+                // console.log('Selected', element) //, element.id, element.type)
+                selectedElement = element
+            }
+            else {
+                selectedElement = null
+            }
+            mouseDown = null
+        }
+
     }, Camelot.Constants.CHANGE_TIMEOUT)
 
     const onChange = useCallback((elements, appState, files) => {
         debounceChange(elements, appState, files)
     }, [debounceChange])
+
+    const closeModal = () => {
+        setShowModal(false)
+    }
+
+    const diagramSelected = (diagramId) => {
+
+        const elements = excalidrawRef.current.getSceneElements()
+        let newArr = []
+        if (elements) {
+            const element = elements.filter((item) => item.id === widget.id)
+            if (element) {
+                newArr = elements.map(obj => {
+                    if (obj.id === widget.id) {
+                        return { ...obj, link: `camelot:${diagramId}` };
+                    }
+                    return obj;
+                });
+            }
+            excalidrawRef.current.updateScene({
+                elements: newArr
+            })
+        }
+        // alert('Selected this diagram', diagramId)
+    }
 
     return (
         <div className="App">
@@ -181,6 +250,7 @@ export default function Draw() {
                 <Excalidraw
                     ref={excalidrawRef}
                     initialData={initialStatePromiseRef.current.promise}
+                    onPointerUpdate={handleMouse}
                     onChange={onChange}
                     libraryReturnUrl={window.location.href}
                     onLibraryChange={handleLibraryChange}
@@ -191,6 +261,7 @@ export default function Draw() {
                     onLinkOpen={onLinkOpen}
                 />
             </div>
+            <ChooseModal showModal={showModal} closeModal={closeModal} selectDiagram={diagramSelected} currentDiagram={context.diagramId} />
         </div>
     );
 }
