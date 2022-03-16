@@ -337,3 +337,56 @@ div.save-button button {
     -o-transform: translate(-50%, -50%);
     -ms-transform: translate(-50%, -50%);
   }
+
+  .longpress-instructions {
+      text-align: center;
+      color: #aaa;
+      font-size: .8em;
+      margin-top: 21px;
+  }
+
+    button.selection-button {
+        color: #1779ba;
+        cursor: pointer;
+    }
+    
+    button.selection-button:hover {
+        color: #A55640;
+        text-decoration: underline;
+        cursor: pointer;
+    }
+
+    .preferences-title {
+        position: relative;
+        display: inline;
+        top: -9px; 
+        font-size: 1.2em;
+    }
+
+    .preferences-icon {
+        color: #A55640;
+        font-size: 1.5em;
+        margin-right: 9px;
+        position: relative;
+        top: 8px;
+    }
+
+    select#Diagrams {
+        border-radius: 6px;
+        padding: 7px;
+        height: 175px;
+    }
+
+    select#Diagrams option {
+        padding: 12px;
+        border-bottom: 1px solid #eee;
+    }
+
+    select#Diagrams option:hover {
+        background-color: #f9f9f9;
+    }
+    
+    select#Diagrams option:active:hover{
+        background-color: #A55640;
+        color: #fff;
+    }

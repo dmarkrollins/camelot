@@ -262,7 +262,6 @@ const DiagramList = () => {
             setDiagramName(response.diagramName)
             setDiagramDesc(response.diagramDesc)
             setDiagramId(id)
-            // context.setDiagram({ id: response.diagramId, name: response.diagramName, desc: response.diagramDesc, drawing: response.drawing })
             Sleep(200)
             setShowModal(true)
         }
@@ -343,7 +342,6 @@ const DiagramList = () => {
                                 <span aria-hidden="true"><IoChevronForwardCircleOutline style={nextStyle()} /></span>
                             </button>
                         </div>
-
                     </>
 
                 </div>

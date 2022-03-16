@@ -42,7 +42,16 @@ I built this with the excellent [Serverless Stack SST](https://serverless-stack.
     - clear navigation hierarchy and local diagrams when you return to list
     - bread crumb trail
 - tests - started out as an experiment :- now it's a thing...
-- By default anyone can edit your diagram - they are 'public'
+- playlists
+    - create new playlist
+    - select diagrams to include in playlist
+    - order diagrams in playlist
+    - play play list
+    - up and left arrow keys = previous diagram in playlist
+    - right and down arrow keys = next diagram in playlist
+- auto save opt in
+- manage version history - user can choose from history which version to go back to
+- By default diagrams are private
 - You can make your diagrams private and only make them public when you want to unleash them
 - You can lock public diagrams you create so no one else can edit them
 - Folks can request you make them editors for a diagram you create which you approve or reject

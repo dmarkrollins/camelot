@@ -10,9 +10,6 @@ import Camelot from './utils/camelot'
 import { DataManager } from './utils/dataManager'
 import DiagramModal from './diagramModal'
 import ConfirmModal, { ConfirmTypes } from './confirmModal'
-// const reduce = require('image-blob-reduce')();
-// import { v4 as uuidv4 } from 'uuid';
-// import ResizeBlob from './utils/resizeBlob'
 
 const DiagramButtons = ({ xRef, handleSpinner }) => {
     const navigate = useNavigate()
@@ -153,6 +150,9 @@ const DiagramButtons = ({ xRef, handleSpinner }) => {
             <button type="button" className="camelot-button-active" title="Return To List" onClick={handleReturn}><IoChevronBackCircleOutline /><span className="button-title">Return</span></button>
             <button type="button" className="camelot-button-active" title="Clear Diagram" onClick={handleGrid}>{context.gridEnabled ? <IoSquareOutline /> : <IoAppsSharp />}<span className="button-title">Grid</span></button>
             <button type="button" className="camelot-button-active" title="Clear Diagram" onClick={handleClear}><IoTrashOutline /><span className="button-title">Clear</span></button>
+            <div className="longpress-instructions">
+                Long Press to Link Diagrams
+            </div>
             <DiagramModal handleSave={saveNewDiagram} showModal={showModal} closeModal={closeModal} />
             <ConfirmModal handleResult={handleConfirmResponse} confirmType={ConfirmTypes.QUESTION} returnValue={1} showModal={showConfirm} defaultPrompt='Are you sure you want to clear this diagram?' title='Clear Diagram' />
 
