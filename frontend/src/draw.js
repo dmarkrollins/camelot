@@ -7,6 +7,7 @@ import DiagramButtons from './diagramButtons'
 import CamContext from './utils/camelotContext'
 import Camelot from './utils/camelot'
 import ChooseModal from './chooseModal'
+import { IoCalendarNumberSharp } from "react-icons/io5";
 
 const resolvablePromise = () => {
     let resolve;
@@ -234,6 +235,38 @@ export default function Draw() {
         // alert('Selected this diagram', diagramId)
     }
 
+    const diagramList = (diagrams) => {
+
+        if (diagrams.length === 0) {
+            return ''
+        }
+
+        const list = []
+
+        for (let i = 0; i < diagrams.length; i += 1) {
+            if (i === (diagrams.length - 1)) {
+                list.push(<span>{diagrams[i].diagramName}</span>)
+            }
+            else {
+                list.push(<a href={`/draw/${diagrams[i].diagramId}`} alt=''>{diagrams[i].diagramName}</a>)
+            }
+            if (i < (diagrams.length - 1)) {
+                list.push(<span> / </span>)
+            }
+        }
+
+        return list
+    }
+
+    const renderFooter = () => {
+        const diagrams = Camelot.LocalStorage.get({ key: Camelot.Constants.BREADCRUMB, defaultValue: [], isJson: true })
+        return (
+            <div className="draw-footer">
+                {diagramList(diagrams)}
+            </div>
+        )
+    };
+
     return (
         <div className="App">
             <DiagramButtons xRef={excalidrawRef} handleSpinner={spinHandler} />
@@ -259,6 +292,7 @@ export default function Draw() {
                     name="Custom name of drawing"
                     UIOptions={{ canvasActions: { loadScene: false } }}
                     onLinkOpen={onLinkOpen}
+                    renderFooter={renderFooter}
                 />
             </div>
             <ChooseModal showModal={showModal} closeModal={closeModal} selectDiagram={diagramSelected} currentDiagram={context.diagramId} />

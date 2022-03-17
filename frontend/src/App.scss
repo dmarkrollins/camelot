@@ -340,8 +340,8 @@ div.save-button button {
 
   .longpress-instructions {
       text-align: center;
-      color: #aaa;
-      font-size: .8em;
+      color: #999;
+      font-size: .75em;
       margin-top: 21px;
   }
 
@@ -389,4 +389,15 @@ div.save-button button {
     select#Diagrams option:active:hover{
         background-color: #A55640;
         color: #fff;
+    }
+
+    .draw-footer {
+        padding-left: 21px;
+        position: relative; 
+        top: 7px; 
+        width: 750px;
+        height: 42px;
+        text-align: left;
+        overflow-x: auto;
+        white-space: nowrap;
     }

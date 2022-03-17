@@ -3,6 +3,7 @@ const Camelot = {}
 Camelot.Constants = {
     DIAGRAM: 'diagram',
     LIBRARIES: 'libraries',
+    BREADCRUMB: 'bread-crumb',
     CHANGE_TIMEOUT: 450,
     SEARCH_TIMEOUT: 350
 }

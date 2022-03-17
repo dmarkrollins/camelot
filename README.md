@@ -34,13 +34,6 @@ I built this with the excellent [Serverless Stack SST](https://serverless-stack.
 <img src="/images/Remove.jpg" alt="" width="300" />
 
 ### Current Roadmap
-- link one diagram to another 
-    - when link is clicked replace current drawing with target drawing
-    - show back button on diagrambuttons
-    - remember hierarchy in local storage
-    - keep diagrams navigated to in local storage during navigation 
-    - clear navigation hierarchy and local diagrams when you return to list
-    - bread crumb trail
 - tests - started out as an experiment :- now it's a thing...
 - playlists
     - create new playlist

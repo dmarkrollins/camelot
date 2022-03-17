@@ -241,9 +241,9 @@ const DiagramList = () => {
         const id = e.currentTarget.dataset.id
         setLoading(true)
         try {
-            const response = await DataManager.getDrawing({ id })
-            context.setDiagram({ id: response.diagramId, name: response.diagramName, desc: response.diagramDesc, drawing: response.drawing })
-            navigate('/draw')
+            // const response = await DataManager.getDrawing({ id })
+            // context.setDiagram({ id: response.diagramId, name: response.diagramName, desc: response.diagramDesc, drawing: response.drawing })
+            navigate(`/draw/${id}`)
         }
         catch (err) {
             console.log(err)
