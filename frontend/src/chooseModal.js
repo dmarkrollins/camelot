@@ -11,7 +11,7 @@ export const ConfirmTypes = {
     INFORM: 'inform'
 }
 
-const ChooseModal = ({ showModal = false, closeModal, selectDiagram, currentDiagram }) => {
+const ChooseModal = ({ showModal = false, closeModal, selectDiagram, currentDiagram, currentWidget }) => {
 
     const [search, setSearch] = useState('')
     const [diagrams, setDiagrams] = useState([])
@@ -40,7 +40,7 @@ const ChooseModal = ({ showModal = false, closeModal, selectDiagram, currentDiag
     }
 
     const diagramSelected = (e) => {
-        const id = e.currentTarget.value
+        const id = e.currentTarget.dataset.id
         selectDiagram(id)
         closeModal()
     }
@@ -52,10 +52,24 @@ const ChooseModal = ({ showModal = false, closeModal, selectDiagram, currentDiag
 
         const list = []
 
-        for (let i = 0; i < diagrams.length; i++) {
-            if (diagrams[i].diagramId !== currentDiagram) {
-                list.push(<option key={diagrams[i].diagramId} value={diagrams[i].diagramId}>{diagrams[i].diagramName}</option>)
+        if (currentWidget && currentWidget.link) {
+            list.push(<span key={-1} data-id={''} onClick={diagramSelected} style={{ color: '#990000', fontStyle: 'italic' }}>Remove Existing Link</span>)
+
+        }
+
+        const sortedDiagrams = diagrams.sort((a, b) => {
+            if (a.diagramName < b.diagramName) {
+                return -1;
             }
+            if (a.diagramName > b.diagramName) {
+                return 1;
+            }
+            return 0;
+        })
+
+        for (let i = 0; i < sortedDiagrams.length; i++) {
+            // list.push(<option key={diagrams[i].diagramId} value={diagrams[i].diagramId}>{diagrams[i].diagramName}</option>)
+            list.push(<span key={diagrams[i].diagramId} value={diagrams[i].diagramId} data-id={diagrams[i].diagramId} onClick={diagramSelected}>{diagrams[i].diagramName}</span>)
         }
 
         return list
@@ -98,14 +112,16 @@ const ChooseModal = ({ showModal = false, closeModal, selectDiagram, currentDiag
                                     />
                                     :
                                     <>
-                                        <select id="Diagrams" size="5" onChange={diagramSelected}>
+                                        <div className="diagram-choose">
                                             {diagramItems(diagrams)}
-                                        </select >
+                                        </div>
+                                        {/* <select id="Diagrams" size="5" onChange={diagramSelected}>
+                                        </select > */}
                                     </>
                                 }
                             </div>
                             <div className="cell small-12" style={{ marginTop: '7px' }}>
-                                <div className="float-left" style={{ display: 'inline-block', fontSize: '.8em', color: '#aaa' }}>First 50 results shown</div>
+                                <div className="float-left" style={{ display: 'inline-block', fontSize: '.8em', color: '#aaa' }}>Search criteria results limited to first 50 items</div>
                             </div>
                         </div>
 

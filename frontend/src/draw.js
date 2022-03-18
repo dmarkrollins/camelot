@@ -227,13 +227,19 @@ export default function Draw() {
             if (element) {
                 newArr = elements.map(obj => {
                     if (obj.id === widget.id) {
-                        return { ...obj, link: `camelot:${diagramId}` };
+                        if (diagramId === '') {
+                            return { ...obj, link: null };
+                        }
+                        else {
+                            return { ...obj, link: `camelot:${diagramId}` };
+                        }
                     }
                     return obj;
                 });
             }
             excalidrawRef.current.updateScene({
-                elements: newArr
+                elements: newArr,
+                appState: { showHyperlinkPopup: false }
             })
         }
         // alert('Selected this diagram', diagramId)
@@ -299,7 +305,7 @@ export default function Draw() {
                     renderFooter={renderFooter}
                 />
             </div>
-            <ChooseModal showModal={showModal} closeModal={closeModal} selectDiagram={diagramSelected} currentDiagram={context.diagramId} />
+            <ChooseModal showModal={showModal} closeModal={closeModal} selectDiagram={diagramSelected} currentDiagram={context.diagramId} currentWidget={widget} />
         </div>
     );
 }

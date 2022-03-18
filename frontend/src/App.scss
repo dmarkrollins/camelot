@@ -371,22 +371,32 @@ div.save-button button {
         top: 8px;
     }
 
-    select#Diagrams {
+    div.diagram-choose {
         border-radius: 6px;
+        border: 1px solid #bbb;
         padding: 7px;
         height: 175px;
+        width: 100%;
+        overflow-y: scroll;
+        overflow-x: hidden;
     }
-
-    select#Diagrams option {
+    
+    div.diagram-choose span {
         padding: 12px;
+        display: block;
+        text-align: left;
+        width: 100%;
+        height: 42px;
         border-bottom: 1px solid #eee;
+        -webkit-appearance: none;
+        white-space: nowrap;
     }
 
-    select#Diagrams option:hover {
+    div.diagram-choose span:hover {
         background-color: #f9f9f9;
     }
     
-    select#Diagrams option:active:hover{
+    div.diagram-choose span:active{
         background-color: #A55640;
         color: #fff;
     }
