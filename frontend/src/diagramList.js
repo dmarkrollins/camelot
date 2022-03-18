@@ -54,6 +54,7 @@ const DiagramList = () => {
             p = Math.ceil(list.length / pageSize) - 1
         }
         finally {
+            Camelot.LocalStorage.set({ key: Camelot.Constants.BREADCRUMB, value: [], isJson: true })
             setPages(p)
             setDiagrams(list)
             setLoading(false)

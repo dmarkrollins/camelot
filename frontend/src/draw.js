@@ -1,13 +1,14 @@
 import React, { useEffect, useState, useRef, useCallback, useContext, useMemo } from "react";
 import Excalidraw from "@excalidraw/excalidraw";
 import { Oval } from 'react-loader-spinner'
+import { useNavigate } from "react-router-dom";
 import { debounce } from "lodash";
 import "./App.scss";
 import DiagramButtons from './diagramButtons'
 import CamContext from './utils/camelotContext'
 import Camelot from './utils/camelot'
 import ChooseModal from './chooseModal'
-import { IoCalendarNumberSharp } from "react-icons/io5";
+
 
 const resolvablePromise = () => {
     let resolve;
@@ -25,6 +26,7 @@ let mouseDown = null
 let selectedElement = null
 
 export default function Draw() {
+    const navigate = useNavigate()
     const context = useContext(CamContext)
     const [isSpinning, setIsSpinning] = useState(false)
     const [showModal, setShowModal] = useState(false)
@@ -124,20 +126,22 @@ export default function Draw() {
         const { nativeEvent } = event.detail;
         const isNewTab = nativeEvent.ctrlKey || nativeEvent.metaKey;
         const isNewWindow = nativeEvent.shiftKey;
-        if (link.startsWith('camelot:')) {
-            const parts = link.split('camelot:')
-            window.location.href = `/draw/${parts[1]}`
-            return
-        }
 
-        const isInternalLink =
-            link.startsWith("/") || link.includes(window.location.origin);
+        const isCamelotLink = link.startsWith('camelot:')
 
-        if (isInternalLink && !isNewTab && !isNewWindow) {
+        const isInternalLink = link.startsWith("/") || link.includes(window.location.origin);
+
+        if ((isCamelotLink || isInternalLink) && !isNewTab && !isNewWindow) {
             // signal that we're handling the redirect ourselves
             event.preventDefault();
-            // do a custom redirect, such as passing to react-router
-            // ...
+
+            if (link.startsWith('camelot:')) {
+                const parts = link.split('camelot:')
+                navigate(`/draw/${parts[1]}`)
+            }
+            else {
+                navigate(link)
+            }
         }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -245,13 +249,13 @@ export default function Draw() {
 
         for (let i = 0; i < diagrams.length; i += 1) {
             if (i === (diagrams.length - 1)) {
-                list.push(<span>{diagrams[i].diagramName}</span>)
+                list.push(<span key={diagrams[i].diagramId}>{diagrams[i].diagramName}</span>)
             }
             else {
-                list.push(<a href={`/draw/${diagrams[i].diagramId}`} alt=''>{diagrams[i].diagramName}</a>)
+                list.push(<a key={diagrams[i].diagramId} href={`/draw/${diagrams[i].diagramId}`} alt=''>{diagrams[i].diagramName}</a>)
             }
             if (i < (diagrams.length - 1)) {
-                list.push(<span> / </span>)
+                list.push(<div key={i} style={{ display: 'inline-block', position: 'relative', top: '2px', fontSize: '1.5em', marginRight: '7px', marginLeft: '7px' }}> &#8250; </div>)
             }
         }
 

@@ -1,5 +1,0 @@
-const Confirm = {}
-
-Confirm.show = () => {
-
-}

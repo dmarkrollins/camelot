@@ -19,7 +19,6 @@ const DiagramButtons = ({ xRef, handleSpinner }) => {
     const [showConfirm, setShowConfirm] = useState(false)
 
     const handleReturn = () => {
-        Camelot.LocalStorage.set({ key: Camelot.Constants.BREADCRUMB, value: [], isJson: true })
         navigate("/");
     }
 
