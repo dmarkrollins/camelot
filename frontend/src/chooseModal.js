@@ -11,7 +11,7 @@ export const ConfirmTypes = {
     INFORM: 'inform'
 }
 
-const ChooseModal = ({ showModal = false, closeModal, selectDiagram, currentDiagram, currentWidget }) => {
+const ChooseModal = ({ showModal = false, closeModal, selectDiagram, currentDiagramId, currentWidget }) => {
 
     const [search, setSearch] = useState('')
     const [diagrams, setDiagrams] = useState([])
@@ -54,7 +54,6 @@ const ChooseModal = ({ showModal = false, closeModal, selectDiagram, currentDiag
 
         if (currentWidget && currentWidget.link) {
             list.push(<span key={-1} data-id={''} onClick={diagramSelected} style={{ color: '#990000', fontStyle: 'italic' }}>Remove Existing Link</span>)
-
         }
 
         const sortedDiagrams = diagrams.sort((a, b) => {
@@ -69,7 +68,10 @@ const ChooseModal = ({ showModal = false, closeModal, selectDiagram, currentDiag
 
         for (let i = 0; i < sortedDiagrams.length; i++) {
             // list.push(<option key={diagrams[i].diagramId} value={diagrams[i].diagramId}>{diagrams[i].diagramName}</option>)
-            list.push(<span key={diagrams[i].diagramId} value={diagrams[i].diagramId} data-id={diagrams[i].diagramId} onClick={diagramSelected}>{diagrams[i].diagramName}</span>)
+
+            if (diagrams[i].diagramId !== currentDiagramId) {
+                list.push(<span key={diagrams[i].diagramId} value={diagrams[i].diagramId} data-id={diagrams[i].diagramId} onClick={diagramSelected}>{diagrams[i].diagramName}</span>)
+            }
         }
 
         return list

@@ -305,7 +305,7 @@ export default function Draw() {
                     renderFooter={renderFooter}
                 />
             </div>
-            <ChooseModal showModal={showModal} closeModal={closeModal} selectDiagram={diagramSelected} currentDiagram={context.diagramId} currentWidget={widget} />
+            <ChooseModal showModal={showModal} closeModal={closeModal} selectDiagram={diagramSelected} currentDiagramId={context.diagramId} currentWidget={widget} />
         </div>
     );
 }
