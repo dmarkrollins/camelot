@@ -33,11 +33,22 @@ I built this with the excellent [Serverless Stack SST](https://serverless-stack.
 
 <img src="/images/Remove.jpg" alt="" width="300" />
 
-### Current Roadmap
+### Diagram Drill Through with Bread Crumb
+
+Highlight a diagram widget then long mouse press the widget (>= 500ms) to pull up the link diagram dialog show below:
+
+<img src="/images/LinkDiagram.jpg" alt="" width="300" />
+
+<img src="/images/DrillIn.jpg" alt="" width="300" />
+
+<img src="/images/BreadCrumb.jpg" alt="" width="300" />
+
+### Candidate Roadmap Items
 - Remember who owns (created) and last modifies a diagram
 - By default diagrams are private
 - You can make your diagrams private and only make them public when you want to unleash them
 - You can lock public diagrams you create so no one else can edit them
+- Add a collaboration server integration so we can mob diagram drawing
 - tests - started out as an experiment :- now it's a thing...
 - playlists
     - create new playlist
@@ -50,5 +61,5 @@ I built this with the excellent [Serverless Stack SST](https://serverless-stack.
 - manage version history - user can choose from history which version to go back to
 - Folks can request you make them editors for a diagram you create which you approve or reject
 - You can create teams with members who can all edit diagrams created for the team
-- Add a collaboration server integration so we can mob diagram drawing
+
 
