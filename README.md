@@ -46,6 +46,7 @@ Highlight a diagram widget then tap the link button to pull up the link diagram 
 <img src="/images/BreadCrumb.jpg" alt="" width="300" />
 
 ### Candidate Roadmap Items
+- ctrl+s to save document
 - Remember who owns (created) and last modifies a diagram
 - By default diagrams are private
 - You can make your diagrams private and only make them public when you want to unleash them
