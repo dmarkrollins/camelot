@@ -22,9 +22,6 @@ const resolvablePromise = () => {
     return promise;
 };
 
-let mouseDown = null
-let selectedElement = null
-
 export default function Draw() {
     const navigate = useNavigate()
     const context = useContext(CamContext)
@@ -155,34 +152,6 @@ export default function Draw() {
         setIsSpinning(val)
     }
 
-    const handleMouse = (event) => {
-
-        if (event.button === 'down') {
-            mouseDown = new Date()
-            selectedElement = null
-            console.log(event)
-            return
-        }
-
-        if (event.button === 'up' && !selectedElement) {
-            mouseDown = null
-            return
-        }
-
-        if (event.button === 'up' && mouseDown) {
-            mouseDown = null
-            selectedElement = null
-            return
-        }
-
-        if (event.button === 'up' && selectedElement) {
-            setWidget(selectedElement)
-            setShowModal(true)
-            // alert(`The selected element ${selectedElement}`)
-            selectedElement = null
-        }
-    }
-
     const debounceChange = debounce((elements, appState, files) => {
         if (!context.diagramId) {
             // save to local storage
@@ -192,20 +161,17 @@ export default function Draw() {
             Camelot.LocalStorage.set({ key: Camelot.Constants.DIAGRAM, value: diagram, isJson: true })
         }
 
-        console.log('Change', mouseDown, appState.selectedElementIds)
+        // console.log('Change', appState.selectedElementIds)
 
-        if (mouseDown) {
-            const keys = Object.keys(appState.selectedElementIds)
-            // console.log('Keys', keys)
-            const element = elements.filter((item) => item.id === keys[0])[0]
-            if (element !== 'undefined') {
-                // console.log('Selected', element) //, element.id, element.type)
-                selectedElement = element
-            }
-            else {
-                selectedElement = null
-            }
-            mouseDown = null
+        const keys = Object.keys(appState.selectedElementIds)
+        // console.log('Keys', keys)
+        const element = elements.filter((item) => item.id === keys[0])[0]
+        if (element !== 'undefined') {
+            // console.log('Selected', element) //, element.id, element.type)
+            setWidget(element)
+        }
+        else {
+            setWidget(null)
         }
 
     }, Camelot.Constants.CHANGE_TIMEOUT)
@@ -277,9 +243,13 @@ export default function Draw() {
         )
     };
 
+    const showChoose = () => {
+        setShowModal(true)
+    }
+
     return (
         <div className="App">
-            <DiagramButtons xRef={excalidrawRef} handleSpinner={spinHandler} />
+            <DiagramButtons xRef={excalidrawRef} handleSpinner={spinHandler} widget={widget} showChoose={showChoose} />
             {isSpinning ? <Oval
                 ariaLabel="loading-indicator"
                 height={100}
@@ -293,7 +263,6 @@ export default function Draw() {
                 <Excalidraw
                     ref={excalidrawRef}
                     initialData={initialStatePromiseRef.current.promise}
-                    onPointerUpdate={handleMouse}
                     onChange={onChange}
                     libraryReturnUrl={window.location.href}
                     onLibraryChange={handleLibraryChange}

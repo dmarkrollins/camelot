@@ -4,7 +4,7 @@ Camelot.Constants = {
     DIAGRAM: 'diagram',
     LIBRARIES: 'libraries',
     BREADCRUMB: 'bread-crumb',
-    CHANGE_TIMEOUT: 450,
+    CHANGE_TIMEOUT: 250,
     SEARCH_TIMEOUT: 350
 }
 
