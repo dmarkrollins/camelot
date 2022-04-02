@@ -35,7 +35,9 @@ I built this with the excellent [Serverless Stack SST](https://serverless-stack.
 
 ### Diagram Drill Through with Bread Crumb
 
-Highlight a diagram widget then long mouse press the widget (>= 500ms) to pull up the link diagram dialog show below:
+Highlight a diagram widget then tap the link button to pull up the link diagram dialog show below:
+
+<img src="/images/LinkButton.jpg" alt="" width="300" />
 
 <img src="/images/LinkDiagram.jpg" alt="" width="300" />
 

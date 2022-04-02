@@ -2,7 +2,7 @@
 // save cancel clear export
 
 import React, { useContext, useState } from 'react'
-import { IoCheckmarkDoneCircleOutline, IoChevronBackCircleOutline, IoTrashOutline, IoAppsSharp, IoSquareOutline } from 'react-icons/io5'
+import { IoCheckmarkDoneCircleOutline, IoChevronBackCircleOutline, IoTrashOutline, IoAppsSharp, IoSquareOutline, IoLinkOutline } from 'react-icons/io5'
 import { useNavigate } from "react-router-dom";
 import CamContext from './utils/camelotContext'
 import { exportToBlob } from "@excalidraw/excalidraw";
@@ -11,7 +11,7 @@ import { DataManager } from './utils/dataManager'
 import DiagramModal from './diagramModal'
 import ConfirmModal, { ConfirmTypes } from './confirmModal'
 
-const DiagramButtons = ({ xRef, handleSpinner }) => {
+const DiagramButtons = ({ xRef, handleSpinner, widget, showChoose }) => {
     const navigate = useNavigate()
     const context = useContext(CamContext)
 
@@ -141,6 +141,14 @@ const DiagramButtons = ({ xRef, handleSpinner }) => {
         }
     }
 
+    const handleLink = () => {
+        showChoose()
+    }
+
+    const linkClass = () => {
+        return widget ? "camelot-button-active" : "camelot-button-inactive"
+    }
+
     return (
         <div className="camelot-button-wrapper">
             <div className="diagram-name">
@@ -148,11 +156,9 @@ const DiagramButtons = ({ xRef, handleSpinner }) => {
             </div>
             <button type="button" className="camelot-button-active" title="Save Diagram" onClick={handleSave}><IoCheckmarkDoneCircleOutline /><span className="button-title">Save</span></button>
             <button type="button" className="camelot-button-active" title="Return To List" onClick={handleReturn}><IoChevronBackCircleOutline /><span className="button-title">Return</span></button>
-            <button type="button" className="camelot-button-active" title="Clear Diagram" onClick={handleGrid}>{context.gridEnabled ? <IoSquareOutline /> : <IoAppsSharp />}<span className="button-title">Grid</span></button>
+            <button type="button" className="camelot-button-active" title="Show Grid" onClick={handleGrid}>{context.gridEnabled ? <IoSquareOutline /> : <IoAppsSharp />}<span className="button-title">Grid</span></button>
             <button type="button" className="camelot-button-active" title="Clear Diagram" onClick={handleClear}><IoTrashOutline /><span className="button-title">Clear</span></button>
-            <div className="longpress-instructions">
-                Long Press to Link Diagrams
-            </div>
+            <button type="button" className={linkClass()} title="Link Diagram" onClick={handleLink}><IoLinkOutline /><span className="button-title">Link</span></button>
             <DiagramModal handleSave={saveNewDiagram} showModal={showModal} closeModal={closeModal} />
             <ConfirmModal handleResult={handleConfirmResponse} confirmType={ConfirmTypes.QUESTION} returnValue={1} showModal={showConfirm} defaultPrompt='Are you sure you want to clear this diagram?' title='Clear Diagram' />
 

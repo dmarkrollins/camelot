@@ -161,31 +161,34 @@
       border-radius: 6px !important;
   }
 
-  .camelot-button-wrapper {
+  div.camelot-button-wrapper {
       position: absolute;
       top: 21px;
-      left: 0px;
+      left: 21px;
       width: 200px;
       height: 48px;
       z-index: 99999;
+      text-align: left;
+      margin-bottom: 21px;
   }
 
-  .camelot-button-wrapper button {
+  div.camelot-button-wrapper button {
     width: 32px;
     height: 32px;
     font-size: 1.75em;
     margin-right: 12px;
+    margin-bottom: 21px;
   }
 
 //   .camelot-button-wrapper button:hover {
 //       cursor: pointer;
 //   }
 
-  .camelot-button-wrapper button span.button-title {
+  div.camelot-button-wrapper button span.button-title {
       font-size: 8pt;
       display: block;
       position: relative;
-      top: -2px;
+      top: -9px;
   }
 
   div.camelot-button-wrapper div.diagram-name {
@@ -193,7 +196,7 @@
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
-    max-width: 175px;
+    max-width: 200px;
     margin: 0 auto;
     text-align: center;
     // border: 1px solid #ccc;
@@ -213,7 +216,7 @@
     cursor: pointer;
   }
   button.camelot-button-inactive {
-    color: #666;
+    color: #bbb;
   }
   button.camelot-button-inactive:hover {
     cursor: no-drop;
@@ -411,4 +414,12 @@ div.save-button button {
         overflow-x: auto;
         white-space: nowrap;
         background-color: rgba(255, 255, 255, .8)
+    }
+
+    // App-menu__left
+
+    .excalidraw .layer-ui__wrapper:not(.disable-pointerEvents) .App-menu_top > * {
+        position: relative !important;
+        left: 12px !important;
+        top: 35px !important;
     }
